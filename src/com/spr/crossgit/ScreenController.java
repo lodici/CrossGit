@@ -3,6 +3,7 @@ package com.spr.crossgit;
 import com.spr.crossgit.screen.commit.CommitScreen;
 import com.spr.crossgit.screen.WebBrowserScreen;
 import com.spr.crossgit.screen.MainScreen;
+import com.spr.crossgit.screen.StartScreen;
 import java.util.Optional;
 import java.util.Stack;
 import javafx.application.Platform;
@@ -36,7 +37,7 @@ public final class ScreenController {
         final Scene scene;
         scene = new Scene(screen.getRoot(), 800, 600, Color.BLACK);
         scene.getStylesheets().clear();
-        scene.getStylesheets().add(MainApp.class.getResource("/styles/ClientApp.css").toExternalForm());
+        scene.getStylesheets().add(MainApp.class.getResource("/resources/styles/ClientApp.css").toExternalForm());
         mainStage.setScene(scene);
     }
 
@@ -86,11 +87,16 @@ public final class ScreenController {
             }
         });
         showMainScreen();
+//        showStartScreen();
         mainStage.show();
     }
 
     public static Stage getStage() {
         return mainStage;
+    }
+
+    public static void showStartScreen() {
+        showScreen(new StartScreen());
     }
     
     public static void showMainScreen() {

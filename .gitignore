@@ -1,4 +1,5 @@
 /build/
-target/
-nb-configuration.xml
-nbactions-devMode.xml
+/nbproject/
+/lib/
+/dist/
+

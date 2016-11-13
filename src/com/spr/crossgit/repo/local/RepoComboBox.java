@@ -32,7 +32,7 @@ class RepoComboBox extends ComboBox<String> {
 
     RepoComboBox(LocalRepoPane listener) {
 
-        setValue("");
+        setValue("Click here to open an existing git repository...");
         setItems(getRecentRepos());
         getSelectionModel().select(0);
 
@@ -44,11 +44,15 @@ class RepoComboBox extends ComboBox<String> {
 
     private void setShowPopupMenuOnRightClick() {
         addEventFilter(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            if (event.getButton() == MouseButton.SECONDARY) {
+            if (getItems().isEmpty()) {
                 event.consume();
-                menu.show(this, event.getScreenX(), event.getScreenY());
             } else {
-                menu.hide();
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    event.consume();
+                    menu.show(this, event.getScreenX(), event.getScreenY());
+                } else {
+                    menu.hide();
+                }
             }
         });
     }
@@ -75,6 +79,7 @@ class RepoComboBox extends ComboBox<String> {
     }
 
     private void setPopupMenu() {
+        menu.getItems().clear();
         menu.getItems().addAll(
                 getLocalRepoMenuItem(),
                 getExploreMenuItem()
