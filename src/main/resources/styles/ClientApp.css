@@ -1,0 +1,304 @@
+/*
+=== Class selector ===
+The class selector selects elements with a specific class attribute.
+Write a period (.) character, followed by the name of the class.
+
+=== Child selector ===
+div > p {
+    background-color: yellow;
+}
+The child selector selects all elements that 
+are the immediate children of a specified element.
+( http://www.w3schools.com/css/css_combinators.as
+
+=== Pseudo-class ===
+selector:pseudo-class {
+    property:value;
+}
+A pseudo-class is used to define a special state of an element.
+( http://www.w3schools.com/css/css_pseudo_classes.asp )
+
+*/
+
+*{
+    -spr-text-color: #cccccc;
+    -spr-background-color: #333333;
+    -spr-odd-background-color: #2c2c2c;
+    -spr-even-background-color: transparent;   
+    -spr-empty-background-color: #383838;
+}
+
+
+.root{
+    -fx-background-color: -spr-background-color;    
+    -fx-font: 14px Consolas;    
+    -fx-font-smoothing-type: lcd;       
+    -fx-text-fill: -spr-text-color;        
+}
+
+
+.split-pane {
+    -fx-background-color: transparent;
+}
+.split-pane > .split-pane-divider {  
+    -fx-padding: 0 0.15em 0 0.15em;
+    -fx-background-color: #aaaaaa;
+}
+
+
+.combo-box:hover {
+    -fx-text-fill: yellow;    
+}
+
+.combo-box, .text-field {
+/*    -fx-background-color: -spr-background-color;*/
+    -fx-text-fill: -spr-text-color;
+    -fx-padding: 0;    
+}
+/* remove arrows */
+/*.combo-box .arrow, .combo-box .arrow-button {
+    -fx-background-color: transparent;
+}*/
+.combo-box .list-cell {
+    -fx-background: -spr-background-color;
+    /*-fx-background-color: transparent;*/
+    -fx-text-fill: -spr-text-color;
+    -fx-padding: 3 0 2 0;
+    -fx-cell-size: 1.66667em; 
+}
+.combo-box .list-cell:hover {
+    -fx-text-fill: yellow;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: -spr-background-color, -spr-background-color;
+/*    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );*/
+}    
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 4 0 4 5;
+    /* No alternate highlighting */
+    -fx-background-color: -spr-background-color;
+}
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: white;
+}
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: white;
+}
+.combo-box-base  {
+    /*-fx-skin: "com.sun.javafx.scene.control.skin.ComboBoxBaseSkin";*/
+    -fx-background-color: -spr-background-color, -spr-background-color, -spr-background-color, transparent;
+/*    -fx-background-radius: 5, 5, 4, 3;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;*/
+    -fx-padding: 0;
+    -fx-text-fill: -spr-text-color;
+    -fx-color: -spr-background-color, -spr-background-color, -spr-background-color, -spr-background-color, -spr-background-color;
+    -fx-font: 14px Consolas;    
+    -fx-font-smoothing-type: lcd;     
+}
+/*.combo-box-base:showing {
+    -fx-color: white;
+}
+.combo-box-base:armed {
+    -fx-color: white;
+}
+.combo-box-base:active {
+    -fx-color: white;
+}*/
+.combo-box-base:focused {
+    /*-fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;*/
+    -fx-background-color: #3c3c3c, #3c3c3c, #3c3c3c, #3c3c3c;    
+    -fx-background-radius: 6.4, 4, 5, 3;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+.combo-box-base:hover  {
+    -fx-background-color: #3c3c3c, -spr-text-color, #3c3c3c, transparent;
+    -fx-text-fill: white;
+/*    -fx-color: white;*/
+}
+.combo-box-base:disabled {
+    -fx-opacity: .4;
+}
+
+
+.menu {
+    -fx-background-color: -spr-background-color;    
+}
+.menu-item {
+    -fx-background-color: transparent;    
+    -fx-background-color: #3c3c3c;    
+}
+.menu-item .label {
+    -fx-text-fill: white;
+}
+.menu-item:focused {
+     -fx-background-color: darkgray;
+}
+.menu-item:focused .label {
+    -fx-text-fill: blue;
+}
+.context-menu {
+    /*-fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";*/
+    -fx-background-color: -spr-background-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+/*    -fx-padding: 0.666667em 0.083333em 0.666667em 0.083333em;  8 1 8 1 */
+    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
+}
+
+.tab-pane {
+    -fx-tab-min-width:110px;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+.tab-pane .tab {
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: -spr-text-color;
+    -fx-font: 14px sans-serif;
+    -fx-focus-color: transparent;   
+    -fx-faint-focus-color: transparent
+}
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: -spr-text-color;  
+}
+.tab:selected .tab-label { 
+    -fx-text-fill: white;
+    -fx-font-weight: bold; 
+}
+
+
+.hyperlink {
+    -fx-text-fill: -spr-text-color;
+    -fx-border-color: transparent;
+    -fx-underline: false;
+    -fx-padding: 0;
+}
+.hyperlink:hover {
+    -fx-text-fill: white;
+}
+
+
+.label {
+    -fx-text-fill: -spr-text-color;    
+}
+
+
+.list-view {
+   -fx-background-color: transparent;
+   -fx-table-cell-border-color: transparent;    
+}
+.list-view .list-cell:even {
+    -fx-background-color: -spr-even-background-color;
+    -fx-text-fill: -spr-text-color;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: -spr-odd-background-color;
+    -fx-text-fill: -spr-text-color;
+}
+.list-view .list-cell:selected  {
+    -fx-background-color: #666666;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}
+.list-view .list-cell:empty {
+    -fx-background-color: -spr-empty-background-color;
+}
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-padding:0;
+}
+
+
+.corner {    
+    -fx-background-color: transparent;
+}
+
+
+.table-view {
+   -fx-background-color: transparent;
+   -fx-table-cell-border-color: transparent;
+}
+.table-view:focused {
+    -fx-background-color: transparent;
+}
+.table-view .column-header-background{
+    /*-fx-background-color: linear-gradient(#131313 0%, #424141 100%);*/
+    -fx-background-color: transparent;
+}
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: white; 
+    -fx-font: 14px sans-serif; 
+    -fx-font-weight: bold;  
+}
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+.table-view .column-header-background .filler {
+  -fx-background-color: transparent;
+  -fx-padding: 1em;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+.table-view .table-cell{
+    -fx-text-fill: -spr-text-color;
+}
+
+.table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, -spr-even-background-color;
+    /*-fx-background-insets: 0, 0 0 1 0;*/
+    -fx-padding: 0.0em;
+}
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, -spr-odd-background-color;
+    /*-fx-background-insets: 0, 0 0 1 0;*/
+    -fx-padding: 0.0em;
+}
+.table-row-cell:selected {
+    -fx-background-color: #666666;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+    -fx-table-cell-border-color: transparent;
+}
+.table-row-cell:empty {
+    -fx-background-color: -spr-empty-background-color;
+}
+/*.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}*/
+
+
+.table-view > .virtual-flow > .scroll-bar:vertical,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.table-view > .virtual-flow > .scroll-bar:horizontal,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+    -fx-background-color: transparent;
+}
+
+.list-view > .virtual-flow > .scroll-bar:vertical,
+.list-view > .virtual-flow > .scroll-bar:vertical > .track,
+.list-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.list-view > .virtual-flow > .scroll-bar:horizontal,
+.list-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.list-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+    -fx-background-color: transparent;
+}
+
+
+
+/*
+.table-view > .virtual-flow > .scroll-bar > .increment-button, 
+.table-view > .virtual-flow > .scroll-bar > .decrement-button {
+    -fx-opacity: 0;
+}*/
