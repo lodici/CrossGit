@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javafx.concurrent.Task;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.BranchTrackingStatus;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
@@ -24,7 +25,32 @@ public class RemoteStatusTask extends Task<RemoteStatus> {
 
     @Override
     protected RemoteStatus call() throws Exception {
-        return getRemoteStatus();
+        return getRemoteStatus2();
+    }
+    
+    private static List<Integer> getCounts(BranchTrackingStatus trackingStatus) throws IOException {
+        List<Integer> counts = new ArrayList<>();
+        counts.add(trackingStatus.getAheadCount());
+        counts.add(trackingStatus.getBehindCount());
+        return counts;
+}
+
+    private RemoteStatus getRemoteStatus2() throws GitAPIException, IOException {
+        final RemoteStatus status = new RemoteStatus();
+        for (Ref remote : getRemoteRefs(repo)) {
+            System.out.println(remote);
+            final Ref local = repo.exactRef(remote.getName());
+            if (local != null) {
+                final BranchTrackingStatus ts = BranchTrackingStatus.of(repo, remote.getName());
+                if (ts != null) {
+                    status.commitsAhead = ts.getAheadCount();
+                    status.commitsBehind = ts.getBehindCount();
+                    System.out.println(status);
+//                    return status;
+                }
+            }
+        }
+        return status;
     }
 
     private RemoteStatus getRemoteStatus() throws IOException {
@@ -58,5 +84,4 @@ public class RemoteStatusTask extends Task<RemoteStatus> {
         }
         return null;
     }
-
 }

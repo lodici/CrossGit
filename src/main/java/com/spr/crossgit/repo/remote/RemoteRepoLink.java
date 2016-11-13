@@ -9,7 +9,7 @@ import javafx.scene.control.MenuItem;
 class RemoteRepoLink extends Hyperlink {
 
     RemoteRepoLink(RemoteRepoPane listener) {
-        setPopupMenu(listener);
+//        setPopupMenu(listener);
         setMouseClickAction();
     }
 

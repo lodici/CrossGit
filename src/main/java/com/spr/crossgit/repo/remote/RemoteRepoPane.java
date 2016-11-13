@@ -42,6 +42,10 @@ public class RemoteRepoPane extends VBox {
     }
 
     private void setStatus(Repository repo) throws IOException {
+
+        // TODO: need to fetch first before this becomes meaningful.
+        if (true) return;
+
         if (statusTask != null && statusTask.isRunning()) {
             statusTask.cancel();
         }
@@ -49,9 +53,11 @@ public class RemoteRepoPane extends VBox {
         statusTask = new RemoteStatusTask(repo);
         statusTask.setOnSucceeded((WorkerStateEvent event) -> {
             RemoteStatus status = statusTask.getValue();
-            if (status != null) {
-                statusLabel.setText(!status.getAheadRefs().isEmpty()
-                        ? "changes on " + status.getAheadRefs() : "");
+            if (status != null && status.isChanged()) {
+//                statusLabel.setText(!status.getAheadRefs().isEmpty()
+//                        ? "changes on " + status.getAheadRefs() : "");
+                statusLabel.setText("ahead=" + status.commitsAhead
+                        + ", behind=" + status.commitsBehind);
             }
         });
         statusTask.setOnFailed((WorkerStateEvent event) -> { 
