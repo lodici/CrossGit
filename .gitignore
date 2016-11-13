@@ -1,5 +1,4 @@
 /build/
 target/
-nbactions.xml
 nb-configuration.xml
 nbactions-devMode.xml
