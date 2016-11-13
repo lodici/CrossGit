@@ -7,7 +7,7 @@ public final class Prefs {
     public static final String DEBUG_BORDER_STYLE = "-fx-border-color: red;";
 
     public static final Preferences userPrefs =
-            Preferences.userRoot().node("com/spr/jagit");
+            Preferences.userRoot().node("com/spr/crossgit");
 
     public static final boolean isDevMode = Boolean.getBoolean("devMode");
 
