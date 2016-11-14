@@ -42,6 +42,8 @@ public class MainScreen implements IScreen {
     private final TagsPane tagsPane;
     private final Tab branchesTab = new Tab("Branches: ...");
     private final Tab tagsTab = new Tab("Tags: ...");
+    private final TabPane sidebar = new TabPane();
+    private final SplitPane splitPane = new SplitPane();
 
     public MainScreen() {
         
@@ -52,6 +54,9 @@ public class MainScreen implements IScreen {
         this.remoteRepoPane = new RemoteRepoPane();
         this.tagsPane = new TagsPane(this);
 
+        sidebar.setVisible(false);
+        splitPane.setVisible(false);
+
         // repo bar.
         HBox.setHgrow(localRepoPane, Priority.NEVER);
         HBox.setHgrow(remoteRepoPane, Priority.ALWAYS);
@@ -61,7 +66,6 @@ public class MainScreen implements IScreen {
         // tabpane
         VBox.setVgrow(branchesPane, Priority.ALWAYS);
         VBox.setVgrow(tagsPane, Priority.ALWAYS);
-        final TabPane sidebar = new TabPane();
         branchesTab.setClosable(false);
         final VBox branchesBox = new VBox(branchesPane);
         branchesTab.setContent(branchesBox);
@@ -76,16 +80,15 @@ public class MainScreen implements IScreen {
         sp1.setStyle("-fx-background-color: transparent;");
         final StackPane sp2 = new StackPane(changesetPane);
         sp2.setStyle("-fx-background-color: transparent;");
-        SplitPane sp = new SplitPane();
-        sp.setStyle("-fx-background-color: transparent;");
-        sp.getItems().addAll(sp1, sp2);
-        sp.setDividerPositions(0.7f);
-        sp.setOrientation(Orientation.VERTICAL);
+        splitPane.setStyle("-fx-background-color: transparent;");
+        splitPane.getItems().addAll(sp1, sp2);
+        splitPane.setDividerPositions(0.7f);
+        splitPane.setOrientation(Orientation.VERTICAL);
 
         // Layout        
         root.setTop(toolbar);
         root.setLeft(sidebar);
-        root.setCenter(sp);
+        root.setCenter(splitPane);
 
         ScreenController.getStage().iconifiedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -138,6 +141,8 @@ public class MainScreen implements IScreen {
         tagsPane.setRepo(repo);
 //        commitsPane.setRepo(repo);
         setRepoStatus();
+        sidebar.setVisible(true);
+        splitPane.setVisible(true);
     }
 
     public void setBranches(BranchesInfo info) {
