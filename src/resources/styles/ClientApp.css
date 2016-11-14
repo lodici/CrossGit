@@ -136,6 +136,11 @@ A pseudo-class is used to define a special state of an element.
 }
 .menu-item:focused .label {
     -fx-text-fill: white;
+} 
+
+.separator .line {
+    -fx-border-color: #666666;
+    -fx-border-width: 1 0 0 0 ;    
 }
 
 .tab-pane {
