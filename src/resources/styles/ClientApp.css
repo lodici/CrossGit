@@ -123,30 +123,19 @@ A pseudo-class is used to define a special state of an element.
     -fx-opacity: .4;
 }
 
-
-.menu {
-    -fx-background-color: -spr-background-color;    
-}
-.menu-item {
-    -fx-background-color: transparent;    
-    -fx-background-color: #3c3c3c;    
-}
-.menu-item .label {
-    -fx-text-fill: white;
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: -spr-empty-background-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-padding: 0.333333em 0.083333em 0.333333em 0.083333em;
+    -fx-font: 14px sans-serif;
+    -fx-font-smoothing-type: lcd;    
 }
 .menu-item:focused {
-     -fx-background-color: darkgray;
+    -fx-background-color: -spr-odd-background-color;
 }
 .menu-item:focused .label {
-    -fx-text-fill: blue;
-}
-.context-menu {
-    /*-fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";*/
-    -fx-background-color: -spr-background-color;
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
-/*    -fx-padding: 0.666667em 0.083333em 0.666667em 0.083333em;  8 1 8 1 */
-    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
+    -fx-text-fill: white;
 }
 
 .tab-pane {
