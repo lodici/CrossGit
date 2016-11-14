@@ -104,11 +104,14 @@ public class LocalRepoPane extends VBox {
     }
 
     public void setRepo(String repoPath) throws IOException {
-        repo = new FileRepositoryBuilder()
-                .setGitDir(new File(repoPath, ".git"))
-                .setMustExist(true)
-                .build();
-        listener.setRepo(repo);
-        setRepo();
+        final File f = new File(repoPath, ".git");
+        if (f.exists()) {
+            repo = new FileRepositoryBuilder()
+                    .setGitDir(new File(repoPath, ".git"))
+                    .setMustExist(true)
+                    .build();
+            listener.setRepo(repo);
+            setRepo();
+        }
     }
 }
