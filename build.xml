@@ -2,14 +2,20 @@
     <description>Builds, tests, and runs the project CrossGit-ant.</description>
     <import file="nbproject/build-impl.xml"/>
 
-	<property name="lib" value="lib" />
-	<mkdir dir="${lib}"/>
-	<!--- obtained via http://mvnrepository.com -->
-	<target name="-pre-compile">
+    <property name="lib" value="lib" />
+    <mkdir dir="${lib}"/>
+    <!--- obtained via http://mvnrepository.com -->
+    <target name="-pre-compile">
       <echo message="downloading JGit to ${lib}"/>
       <get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.jar" 
            dest="${lib}/jgit-4.5.0.201609210915-r.jar" 
            skipexisting="true" />
+      <get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r-javadoc.jar" 
+           dest="${lib}/jgit-4.5.0.201609210915-r-javadoc.jar" 
+           skipexisting="true" />
+      <get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r-sources.jar" 
+           dest="${lib}/jgit-4.5.0.201609210915-r-sources.jar" 
+           skipexisting="true" />      
       <echo message="downloading SLF4J API Module to ${lib}"/>
       <get src="http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar" 
            dest="${lib}/slf4j-api-1.7.21.jar" 
@@ -18,7 +24,8 @@
       <get src="http://central.maven.org/maven2/org/slf4j/slf4j-simple/1.7.21/slf4j-simple-1.7.21.jar" 
            dest="${lib}/slf4j-simple-1.7.21.jar" 
            skipexisting="true" />
-	</target>
+    </target>
+    
     <!--
 
     There exist several targets which are by default empty and which can be 
