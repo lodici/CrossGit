@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
@@ -57,8 +58,16 @@ class RepoComboBox extends ComboBox<String> {
         });
     }
 
+    private MenuItem getRemoveRepoMenuItem() {
+        MenuItem item = new MenuItem("Remove from list");
+        item.setOnAction((ActionEvent event) -> {
+            // ToDO
+        });
+        return item;
+    }
+
     private MenuItem getLocalRepoMenuItem() {
-        MenuItem item = new MenuItem("Local repository...");
+        MenuItem item = new MenuItem("Select repository...");
         item.setOnAction((ActionEvent event) -> {
             Platform.runLater(() -> { setGitFolder(); });
         });
@@ -82,7 +91,9 @@ class RepoComboBox extends ComboBox<String> {
         menu.getItems().clear();
         menu.getItems().addAll(
                 getLocalRepoMenuItem(),
-                getExploreMenuItem()
+                getExploreMenuItem(),
+                new SeparatorMenuItem(),
+                getRemoveRepoMenuItem()
         );
         menu.setAutoFix(true);
         menu.setAutoHide(true);
@@ -92,7 +103,7 @@ class RepoComboBox extends ComboBox<String> {
                 event.consume();
                 menu.hide();
             }
-        });       
+        });
     }
 
     private void setChangeRepoListener(LocalRepoPane listener) {
@@ -115,7 +126,7 @@ class RepoComboBox extends ComboBox<String> {
                     setGitFolder();
                 });
             }
-        });     
+        });
     }
 
     private void setRepo(LocalRepoPane listener, String newValue) {
