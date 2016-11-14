@@ -1,4 +1,5 @@
 # CrossGit
+A cross plaform JavaFX GUI client for git (still at proof-of-concept, pre-alpha stage). Uses [JGit](https://github.com/eclipse/jgit), inspired by [Git Extensions](https://github.com/gitextensions/gitextensions).
 
 ## Netbeans config
 1. clone ``https://github.com/lodici/CrossGit.git``.
