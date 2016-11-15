@@ -1,5 +1,5 @@
 # CrossGit
-A cross plaform JavaFX GUI client for git (still at proof-of-concept, pre-alpha stage). Uses [JGit](https://github.com/eclipse/jgit), inspired by [Git Extensions](https://github.com/gitextensions/gitextensions).
+A cross-platform JavaFX GUI client for git (still at proof-of-concept, pre-alpha stage). Uses [JGit](https://github.com/eclipse/jgit), inspired by [Git Extensions](https://github.com/gitextensions/gitextensions).
 
 ![alt tag](https://github.com/lodici/CrossGit/blob/master/readme.png)
 
