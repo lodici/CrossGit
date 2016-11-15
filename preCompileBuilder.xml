@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pre-compile" default="dependencies" basedir=".">
+	<target name="dependencies">
+		<property name="lib" value="lib" />
+		<mkdir dir="${lib}"/>
+		<echo message="downloading JGit to ${lib}"/>
+		<get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.jar" 
+         dest="${lib}/jgit-4.5.0.201609210915-r.jar" 
+         skipexisting="true" />
+		<get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r-javadoc.jar" 
+         dest="${lib}/jgit-4.5.0.201609210915-r-javadoc.jar" 
+         skipexisting="true" />
+		<get src="http://central.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r-sources.jar" 
+         dest="${lib}/jgit-4.5.0.201609210915-r-sources.jar" 
+         skipexisting="true" />
+		<echo message="downloading SLF4J API Module to ${lib}"/>
+		<get src="http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar" 
+         dest="${lib}/slf4j-api-1.7.21.jar" 
+         skipexisting="true" />
+		<echo message="downloading SLF4J Simple Binding to ${lib}"/>
+		<get src="http://central.maven.org/maven2/org/slf4j/slf4j-simple/1.7.21/slf4j-simple-1.7.21.jar" 
+         dest="${lib}/slf4j-simple-1.7.21.jar" 
+         skipexisting="true" />
+        <echo message="downloading JSch (a Java implementation of SSH2) to ${lib}"/>
+        <get src="http://central.maven.org/maven2/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar" 
+            dest="${lib}/jsch-0.1.54.jar" 
+            skipexisting="true" />		
+	</target>
+</project>
