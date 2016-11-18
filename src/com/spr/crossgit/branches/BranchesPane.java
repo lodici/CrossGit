@@ -18,6 +18,7 @@ import org.eclipse.jgit.lib.Repository;
 public class BranchesPane {
 
     private final VBox pane = new VBox();
+    private final SortButtonBar sortBar;
     private final BranchesList branchesList;
     private BranchesTask task;
     private ExecutorService executor;
@@ -26,8 +27,10 @@ public class BranchesPane {
     public BranchesPane(MainScreen app) {
         this.app = app;
         this.branchesList = new BranchesList();
+        this.sortBar = new SortButtonBar();
+        this.sortBar.setPrefHeight(28.0);
         VBox.setVgrow(branchesList, Priority.ALWAYS);
-        pane.getChildren().addAll(branchesList);
+        pane.getChildren().addAll(branchesList, sortBar.node());
     }
 
     public Node node() {

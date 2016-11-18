@@ -28,7 +28,6 @@ A pseudo-class is used to define a special state of an element.
     -spr-empty-background-color: #383838;
 }
 
-
 .root{
     -fx-background-color: -spr-background-color;    
     -fx-font: 14px Consolas;    
@@ -36,6 +35,14 @@ A pseudo-class is used to define a special state of an element.
     -fx-text-fill: -spr-text-color;        
 }
 
+.toggle-button {
+    -fx-base: #383838;
+}
+.toggle-button:focused {
+    -fx-focus-color: #666666; 
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;    
+}
 
 .split-pane {
     -fx-background-color: transparent;
