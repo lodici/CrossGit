@@ -1,11 +1,8 @@
 package com.spr.crossgit.branches;
 
 import com.spr.crossgit.screen.MainScreen;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -52,15 +49,6 @@ public class BranchesPane {
             final ObservableList<Ref> branches = branchInfo.getRefsList(sortOrder);
             branchesList.setItems(repo, branches);
             app.setBranches(branchInfo);
-            if (!branches.isEmpty()) {
-                try {
-                    final Ref current = repo.findRef(repo.getFullBranch());
-                    branchesList.getSelectionModel().select(current);
-                    branchesList.scrollTo(current);
-                } catch (IOException ex) {
-                    Logger.getLogger(BranchesPane.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
