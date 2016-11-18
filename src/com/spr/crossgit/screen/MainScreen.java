@@ -64,10 +64,10 @@ public class MainScreen implements IScreen {
         toolbar.setAlignment(Pos.CENTER_LEFT);
 
         // tabpane
-        VBox.setVgrow(branchesPane, Priority.ALWAYS);
+        VBox.setVgrow(branchesPane.node(), Priority.ALWAYS);
         VBox.setVgrow(tagsPane, Priority.ALWAYS);
         branchesTab.setClosable(false);
-        final VBox branchesBox = new VBox(branchesPane);
+        final VBox branchesBox = new VBox(branchesPane.node());
         branchesTab.setContent(branchesBox);
         sidebar.getTabs().add(branchesTab);
         tagsTab.setClosable(false);

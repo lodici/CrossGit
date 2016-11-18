@@ -9,13 +9,15 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
-public class BranchesPane extends VBox {
+public class BranchesPane {
 
+    private final VBox pane = new VBox();
     private final BranchesList branchesList;
     private BranchesTask task;
     private ExecutorService executor;
@@ -24,8 +26,12 @@ public class BranchesPane extends VBox {
     public BranchesPane(MainScreen app) {
         this.app = app;
         this.branchesList = new BranchesList();
-        setVgrow(branchesList, Priority.ALWAYS);
-        getChildren().addAll(branchesList);
+        VBox.setVgrow(branchesList, Priority.ALWAYS);
+        pane.getChildren().addAll(branchesList);
+    }
+
+    public Node node() {
+        return pane;
     }
 
     public void setRepo(Repository repo) {
