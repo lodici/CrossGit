@@ -20,6 +20,7 @@ public class CommitsPane extends VBox {
     private final CommitsTable commitsTable;
     private CommitsTask task;
     private final Label headerLabel;
+    private Repository repo;
 
     public CommitsPane(MainScreen app) {
         this.headerLabel = new Label();
@@ -36,6 +37,12 @@ public class CommitsPane extends VBox {
     }
 
     public void setRepo(Repository repo, BranchesInfo info) {
+
+        if (this.repo != null && this.repo == repo) {
+            return;
+        }
+        this.repo = repo;
+
         if (task != null && task.isRunning()) {
             task.cancel();
         }

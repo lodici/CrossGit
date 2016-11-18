@@ -139,14 +139,13 @@ public class MainScreen implements IScreen {
         branchesPane.setRepo(repo);
         tagsTab.setText("Tags: ...");
         tagsPane.setRepo(repo);
-//        commitsPane.setRepo(repo);
         setRepoStatus();
         sidebar.setVisible(true);
         splitPane.setVisible(true);
     }
 
     public void setBranches(BranchesInfo info) {
-        branchesTab.setText("Branches: " + info.getRefsList().size());
+        branchesTab.setText("Branches: " + info.getBranchesTotal());
         commitsPane.setRepo(repo, info);
     }
 

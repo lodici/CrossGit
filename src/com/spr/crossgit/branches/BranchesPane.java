@@ -23,12 +23,15 @@ public class BranchesPane {
     private BranchesTask task;
     private ExecutorService executor;
     private final MainScreen app;
+    private Repository repo;
+    private BranchesInfo branchInfo;
+    private SortOrder sortOrder = SortOrder.NAME;
 
     public BranchesPane(MainScreen app) {
         this.app = app;
-        this.branchesList = new BranchesList();
-        this.sortBar = new SortButtonBar();
-        this.sortBar.setPrefHeight(28.0);
+        branchesList = new BranchesList();
+        sortBar = new SortButtonBar(this);
+        sortBar.setPrefHeight(28.0);
         VBox.setVgrow(branchesList, Priority.ALWAYS);
         pane.getChildren().addAll(branchesList, sortBar.node());
     }
@@ -38,14 +41,15 @@ public class BranchesPane {
     }
 
     public void setRepo(Repository repo) {
+        this.repo = repo;
         if (task != null && task.isRunning()) {
             task.cancel();
         }
         branchesList.setItems(FXCollections.emptyObservableList());
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
-            final BranchesInfo branchInfo = task.getValue();
-            final ObservableList<Ref> branches = branchInfo.getRefsList();
+            branchInfo = task.getValue();
+            final ObservableList<Ref> branches = branchInfo.getRefsList(sortOrder);
             branchesList.setItems(repo, branches);
             app.setBranches(branchInfo);
             if (!branches.isEmpty()) {
@@ -64,5 +68,12 @@ public class BranchesPane {
         executor = Executors.newSingleThreadExecutor();
         executor.submit(task);
         executor.shutdown();
+    }
+
+    void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
+        branchesList.setItems(repo, branchInfo.getRefsList(sortOrder));
+        branchesList.scrollTo(0);
+        branchesList.requestFocus();
     }
 }

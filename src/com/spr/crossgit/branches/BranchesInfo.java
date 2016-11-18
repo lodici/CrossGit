@@ -82,14 +82,6 @@ public class BranchesInfo {
         }
     }
 
-    public ObservableList<Ref> getRefsList() {
-        return FXCollections.observableArrayList(commits.stream()
-                .sorted((c1, c2) -> c2.commitRef.getCommitTime() - c1.commitRef.getCommitTime())
-                .map(c -> c.branchRef)
-                .collect(Collectors.toList())
-        );
-    }
-
     public List<Ref> getHeadRefs(String commitHash) {
         return refMap.containsKey(commitHash)
                 ? refMap.get(commitHash)
@@ -98,5 +90,53 @@ public class BranchesInfo {
 
     public boolean isOnActiveBranch(RevCommit revCommit) {
         return revCommit.getId().equals(currentBranch.getObjectId());
+    }
+
+    private ObservableList<Ref> getSortedByNameReversed() {
+        return FXCollections.observableArrayList(commits.stream()
+                .sorted((c1, c2) -> c2.branchRef.getName()
+                        .compareToIgnoreCase(c1.branchRef.getName()))
+                .map(c -> c.branchRef)
+                .collect(Collectors.toList())
+        );
+    }
+
+    private ObservableList<Ref> getSortedByName() {
+        return FXCollections.observableArrayList(commits.stream()
+                .sorted((c1, c2) -> c1.branchRef.getName()
+                        .compareToIgnoreCase(c2.branchRef.getName()))
+                .map(c -> c.branchRef)
+                .collect(Collectors.toList())
+        );
+    }
+
+    private ObservableList<Ref> getSortedByDate() {
+        return FXCollections.observableArrayList(commits.stream()
+                .sorted((c1, c2) -> c1.commitRef.getCommitTime() - c2.commitRef.getCommitTime())
+                .map(c -> c.branchRef)
+                .collect(Collectors.toList())
+        );
+    }
+
+    private ObservableList<Ref> getSortedByDateReversed() {
+        return FXCollections.observableArrayList(commits.stream()
+                .sorted((c1, c2) -> c2.commitRef.getCommitTime() - c1.commitRef.getCommitTime())
+                .map(c -> c.branchRef)
+                .collect(Collectors.toList())
+        );
+    }
+
+    ObservableList<Ref> getRefsList(SortOrder sortBy) {
+        switch (sortBy) {
+            case NAME: return getSortedByName();
+            case NAME_REVERSED: return getSortedByNameReversed();
+            case DATETIME: return getSortedByDate();
+            case DATETIME_REVERSED: return getSortedByDateReversed();
+        }
+        throw new RuntimeException("Invalid switch value.");
+    }
+
+    public int getBranchesTotal() {
+        return commits.size();
     }
 }
