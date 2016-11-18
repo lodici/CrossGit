@@ -64,13 +64,16 @@ public class BranchesInfo {
         }
     }
 
+    /**
+     * group branches by rev id.
+     * (can have more than one branch associated with a rev)
+     */
     private void setRefsMap() {
         this.refMap = new HashMap<>(refs.size());
         for (Ref ref : refs) {
             final String key = ObjectId.toString(ref.getObjectId());
             if (refMap.containsKey(key)) {
-                final List<Ref> refList = refMap.get(key);
-                refList.add(ref);
+                refMap.get(key).add(ref);
             } else {
                 final List<Ref> refList = new ArrayList<>();
                 refList.add(ref);
@@ -85,7 +88,6 @@ public class BranchesInfo {
                 .map(c -> c.branchRef)
                 .collect(Collectors.toList())
         );
-//        return FXCollections.observableArrayList(refs);
     }
 
     public List<Ref> getHeadRefs(String commitHash) {
