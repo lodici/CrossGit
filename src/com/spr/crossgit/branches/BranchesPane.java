@@ -23,7 +23,6 @@ public class BranchesPane {
     private final MainScreen app;
     private Repository repo;
     private BranchesInfo branchesInfo;
-    private SortOrder sortOrder = SortOrder.NAME;
 
     public BranchesPane(MainScreen app) {
         this.app = app;
@@ -46,7 +45,8 @@ public class BranchesPane {
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
             branchesInfo = task.getValue();
-            final ObservableList<Ref> branches = branchesInfo.getRefsList(sortOrder);
+            final ObservableList<Ref> branches = 
+                    branchesInfo.getRefsList(SortOrder.getValue());
             branchesList.setItems(repo, branches);
             app.setBranches(branchesInfo);
         });
@@ -59,7 +59,7 @@ public class BranchesPane {
     }
 
     void setSortOrder(SortOrder sortOrder) {
-        this.sortOrder = sortOrder;
+        SortOrder.setValue(sortOrder);
         branchesList.setItems(repo, branchesInfo.getRefsList(sortOrder));
         branchesList.scrollTo(0);
         branchesList.requestFocus();

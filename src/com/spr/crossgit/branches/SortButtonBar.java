@@ -23,29 +23,33 @@ class SortButtonBar {
         btn1.setUserData(SortOrder.NAME);
         btn1.setGraphic(ResourceHelper.getImage("sort-alpha-16.png"));
         btn1.setToggleGroup(tg);
-        btn1.setSelected(true);
+        btn1.setSelected(SortOrder.isEqualTo(SortOrder.NAME));
 
         RadioButton btn2 = new ToggleRadioButton();
         btn2.setUserData(SortOrder.NAME_REVERSED);
         btn2.setGraphic(ResourceHelper.getImage("sort-alpha-reversed-16.png"));
         btn2.setToggleGroup(tg);
+        btn2.setSelected(SortOrder.isEqualTo(SortOrder.NAME_REVERSED));
 
         RadioButton btn3 = new ToggleRadioButton();
         btn3.setUserData(SortOrder.DATETIME);
         btn3.setTooltip(new Tooltip("Sort by commit time, oldest first."));
         btn3.setGraphic(ResourceHelper.getImage("sort-numeric-16.png"));
         btn3.setToggleGroup(tg);
+        btn3.setSelected(SortOrder.isEqualTo(SortOrder.DATETIME));
 
         RadioButton btn4 = new ToggleRadioButton();
         btn4.setUserData(SortOrder.DATETIME_REVERSED);
         btn4.setTooltip(new Tooltip("Sort by commit time, most recent first."));
         btn4.setGraphic(ResourceHelper.getImage("sort-numeric-reversed-16.png"));
         btn4.setToggleGroup(tg);
+        btn4.setSelected(SortOrder.isEqualTo(SortOrder.DATETIME_REVERSED));
 
         tg.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                listener.setSortOrder((SortOrder) newValue.getUserData());
+                SortOrder.setValue((SortOrder) newValue.getUserData());
+                listener.setSortOrder(SortOrder.getValue());
             }
         });
 
