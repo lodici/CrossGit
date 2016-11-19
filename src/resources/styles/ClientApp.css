@@ -201,7 +201,8 @@ A pseudo-class is used to define a special state of an element.
     -fx-background-color: -spr-odd-background-color;
     -fx-text-fill: -spr-text-color;
 }
-.list-view .list-cell:selected  {
+/* Style of selected row but only when list view has focus */
+.list-view:focused .list-cell:filled:selected {
     -fx-background-color: #666666;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
