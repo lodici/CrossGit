@@ -13,7 +13,7 @@ import org.eclipse.jgit.lib.Repository;
 
 class BranchesList extends ListView<Ref> {
 
-    private Repository repo;
+    private String currentBranch;
 
     BranchesList() {
 
@@ -32,7 +32,7 @@ class BranchesList extends ListView<Ref> {
                 super.updateItem(item, empty);
                 final String name = empty ? "" : item.getName().replaceAll("refs/heads/", "");
                 setText(name);
-                super.setStyle(name.equals(getCurrentBranch())
+                super.setStyle(name.equals(currentBranch)
                             ? "-fx-text-fill: white; -fx-font-weight: bold;"
                             : "-fx-text-fill: #cccccc;"
                 );
@@ -41,17 +41,16 @@ class BranchesList extends ListView<Ref> {
 
     }
 
-    private String getCurrentBranch() {
+    private void setCurrentBranch(Repository repo) {
         try {
-            return repo.getBranch();
+            this.currentBranch = repo.getBranch();
         } catch (IOException ex) {
             Logger.getLogger(BranchesList.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
         }
     }
 
     void setItems(Repository repo, ObservableList<Ref> branches) {
-        this.repo = repo;
         super.setItems(branches);
+        setCurrentBranch(repo);
     }
 }
