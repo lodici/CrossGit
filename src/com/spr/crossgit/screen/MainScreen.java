@@ -47,13 +47,15 @@ public class MainScreen implements IScreen {
 
     public MainScreen() {
         
-        this.commitsPane = new CommitsPane(this);
-        this.branchesPane = new BranchesPane(this);
-        this.changesetPane = new ChangeSetPane();
-        this.localRepoPane = new LocalRepoPane(this);
-        this.remoteRepoPane = new RemoteRepoPane();
-        this.tagsPane = new TagsPane(this);
-
+        commitsPane = new CommitsPane(this);
+        branchesPane = new BranchesPane(this);
+        changesetPane = new ChangeSetPane();
+        localRepoPane = new LocalRepoPane(this);
+        remoteRepoPane = new RemoteRepoPane();
+        tagsPane = new TagsPane(this);
+        
+        branchesPane.addListener(commitsPane);
+                
         sidebar.setVisible(false);
         splitPane.setVisible(false);
 

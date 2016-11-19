@@ -1,5 +1,6 @@
 package com.spr.crossgit.branches;
 
+import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.screen.MainScreen;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,17 +17,16 @@ public class BranchesPane {
 
     private final VBox pane = new VBox();
     private final SortButtonBar sortBar;
-    private final BranchesList branchesList;
+    private final BranchesList branchesList = new BranchesList();
     private BranchesTask task;
     private ExecutorService executor;
     private final MainScreen app;
     private Repository repo;
-    private BranchesInfo branchInfo;
+    private BranchesInfo branchesInfo;
     private SortOrder sortOrder = SortOrder.NAME;
 
     public BranchesPane(MainScreen app) {
         this.app = app;
-        branchesList = new BranchesList();
         sortBar = new SortButtonBar(this);
         sortBar.setPrefHeight(28.0);
         VBox.setVgrow(branchesList, Priority.ALWAYS);
@@ -45,10 +45,10 @@ public class BranchesPane {
         branchesList.setItems(FXCollections.emptyObservableList());
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
-            branchInfo = task.getValue();
-            final ObservableList<Ref> branches = branchInfo.getRefsList(sortOrder);
+            branchesInfo = task.getValue();
+            final ObservableList<Ref> branches = branchesInfo.getRefsList(sortOrder);
             branchesList.setItems(repo, branches);
-            app.setBranches(branchInfo);
+            app.setBranches(branchesInfo);
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
@@ -60,8 +60,12 @@ public class BranchesPane {
 
     void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
-        branchesList.setItems(repo, branchInfo.getRefsList(sortOrder));
+        branchesList.setItems(repo, branchesInfo.getRefsList(sortOrder));
         branchesList.scrollTo(0);
         branchesList.requestFocus();
+    }
+
+    public void addListener(IBranchListener listener) {
+        branchesList.addListener(listener);
     }
 }

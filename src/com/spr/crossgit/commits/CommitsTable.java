@@ -2,6 +2,7 @@ package com.spr.crossgit.commits;
 
 import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.screen.MainScreen;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
@@ -9,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import org.eclipse.jgit.lib.Ref;
 
 class CommitsTable extends TableView<GitCommit> {
 
@@ -78,6 +80,16 @@ class CommitsTable extends TableView<GitCommit> {
         col.setMaxWidth(1f * Integer.MAX_VALUE * 50 ); // 50% width
 
         getColumns().add(col);
+    }
+
+    void select(Ref ref) {
+        Optional<GitCommit> commit = getItems().stream()
+                .filter(c -> c.isEqualTo(ref))
+                .findFirst();
+        if (commit.isPresent()) {
+            getSelectionModel().select(commit.get());
+            scrollTo(commit.get());
+        }
     }
 
 }

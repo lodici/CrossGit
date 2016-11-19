@@ -1,20 +1,24 @@
 package com.spr.crossgit.commits;
 
 import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.screen.MainScreen;
 import com.spr.crossgit.branches.BranchesInfo;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
-public class CommitsPane extends VBox {
+public class CommitsPane extends VBox
+    implements IBranchListener {
 
     private ExecutorService executor;
     private final CommitsTable commitsTable;
@@ -64,5 +68,12 @@ public class CommitsPane extends VBox {
         executor = Executors.newSingleThreadExecutor();
         executor.submit(task);
         executor.shutdown();
+    }
+
+    @Override
+    public void setBranchRef(Ref ref) {
+        Platform.runLater(() -> {
+            commitsTable.select(ref);
+        });
     }
 }

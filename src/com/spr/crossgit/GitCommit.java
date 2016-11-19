@@ -106,4 +106,8 @@ public class GitCommit {
         return branchInfo.isOnActiveBranch(revCommit);
     }
 
+    public boolean isEqualTo(Ref ref) {
+        return revCommit.getId().equals(ref.getObjectId());
+    }
+
 }
