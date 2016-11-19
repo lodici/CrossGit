@@ -2,6 +2,8 @@ package com.spr.crossgit.commits;
 
 import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.screen.MainScreen;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -82,14 +84,24 @@ class CommitsTable extends TableView<GitCommit> {
         getColumns().add(col);
     }
 
+    private VirtualFlow<?> loadVirtualFlow() {
+        return (VirtualFlow<?>) ((TableViewSkin<?>) getSkin()).getChildren().get(1);
+    }
+
+    private int getNumberOfVisibleRows() {
+        VirtualFlow<?> vf = loadVirtualFlow();
+        return vf.getLastVisibleCell().getIndex() - vf.getFirstVisibleCell().getIndex();
+    }
+
     void select(Ref ref) {
         Optional<GitCommit> commit = getItems().stream()
                 .filter(c -> c.isEqualTo(ref))
                 .findFirst();
         if (commit.isPresent()) {
             getSelectionModel().select(commit.get());
-            scrollTo(commit.get());
+            int visibleRows = getNumberOfVisibleRows();
+            scrollTo(getSelectionModel().getSelectedIndex() - (visibleRows / 2));
         }
     }
-
+    
 }
