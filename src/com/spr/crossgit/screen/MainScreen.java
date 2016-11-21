@@ -4,8 +4,9 @@ import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.IScreen;
 import com.spr.crossgit.MainApp;
 import com.spr.crossgit.ScreenController;
-import com.spr.crossgit.branches.BranchesPane;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.branches.BranchesInfo;
+import com.spr.crossgit.branches.BranchesPane;
 import com.spr.crossgit.changeset.ChangeSetPane;
 import com.spr.crossgit.commits.CommitsPane;
 import com.spr.crossgit.repo.local.LocalRepoPane;
@@ -33,7 +34,7 @@ public class MainScreen implements IScreen {
 
     private final BorderPane root = new BorderPane();
 
-    private Repository repo;
+    private IGitRepository<Repository> repo;
     private final CommitsPane commitsPane;
     private final BranchesPane branchesPane;
     private final ChangeSetPane changesetPane;
@@ -46,16 +47,16 @@ public class MainScreen implements IScreen {
     private final SplitPane splitPane = new SplitPane();
 
     public MainScreen() {
-        
+
         commitsPane = new CommitsPane(this);
         branchesPane = new BranchesPane(this);
         changesetPane = new ChangeSetPane();
         localRepoPane = new LocalRepoPane(this);
         remoteRepoPane = new RemoteRepoPane();
         tagsPane = new TagsPane(this);
-        
+
         branchesPane.addListener(commitsPane);
-                
+
         sidebar.setVisible(false);
         splitPane.setVisible(false);
 
@@ -87,7 +88,7 @@ public class MainScreen implements IScreen {
         splitPane.setDividerPositions(0.7f);
         splitPane.setOrientation(Orientation.VERTICAL);
 
-        // Layout        
+        // Layout
         root.setTop(toolbar);
         root.setLeft(sidebar);
         root.setCenter(splitPane);
@@ -117,17 +118,17 @@ public class MainScreen implements IScreen {
         if (repo != null) {
             try {
                 localRepoPane.setRepo();
-                remoteRepoPane.setRepo(repo);
+                remoteRepoPane.setRepo(repo.get());
             } catch (IOException ex) {
                 Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             }
         }
     }
 
     public void onSelectCommit(GitCommit newValue) {
         if (newValue != null) {
-            changesetPane.setCommit(repo, newValue);
+            changesetPane.setCommit(repo.get(), newValue);
         }
     }
 
@@ -135,12 +136,12 @@ public class MainScreen implements IScreen {
         tagsTab.setText("Tags: " + size);
     }
 
-    public void setRepo(Repository repo) {
-        this.repo = repo;
+    public void setRepo(IGitRepository aRepo) {
+        this.repo = aRepo;
         branchesTab.setText("Branches: ...");
-        branchesPane.setRepo(repo);
+        branchesPane.setRepo(repo.get());
         tagsTab.setText("Tags: ...");
-        tagsPane.setRepo(repo);
+        tagsPane.setRepo(repo.get());
         setRepoStatus();
         sidebar.setVisible(true);
         splitPane.setVisible(true);
@@ -148,7 +149,7 @@ public class MainScreen implements IScreen {
 
     public void setBranches(BranchesInfo info) {
         branchesTab.setText("Branches: " + info.getBranchesTotal());
-        commitsPane.setRepo(repo, info);
+        commitsPane.setRepo(repo.get(), info);
     }
 
     @Override

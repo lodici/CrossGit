@@ -1,7 +1,9 @@
 package com.spr.crossgit.repo.local;
 
-import com.spr.crossgit.screen.MainScreen;
 import com.spr.crossgit.ScreenController;
+import com.spr.crossgit.api.IGitRepository;
+import com.spr.crossgit.jgit.JGitRepository;
+import com.spr.crossgit.screen.MainScreen;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -14,12 +16,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 public class LocalRepoPane extends VBox {
 
-    private Repository repo;
+    private IGitRepository repo;
     private final Hyperlink branchLabel;
     private final Hyperlink statusLink = new Hyperlink();
     private StatusTask statusTask;
@@ -40,7 +40,7 @@ public class LocalRepoPane extends VBox {
         );
 
         this.repoCombo = new RepoComboBox(this);
-        
+
         this.branchLabel = new Hyperlink();
         this.branchLabel.setOnAction((ActionEvent event) -> {
             setStatusLinkText();
@@ -56,11 +56,11 @@ public class LocalRepoPane extends VBox {
         setStatusLinkProperties();
 
         HBox statusHBox = new HBox(branchLabel, statusLink);
-        
+
         getChildren().addAll(repoCombo, statusHBox);
 
-        Platform.runLater(() -> { 
-            try { 
+        Platform.runLater(() -> {
+            try {
                 setRepo(repoCombo.getValue());
             } catch (IOException ex) {
                 Logger.getLogger(LocalRepoPane.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +98,7 @@ public class LocalRepoPane extends VBox {
         executor.shutdown();
     }
 
-    public void setRepo() throws IOException {
+    public void setRepo() {
         branchLabel.setText("on " + repo.getBranch());
         setStatusLinkText();
     }
@@ -106,10 +106,7 @@ public class LocalRepoPane extends VBox {
     public void setRepo(String repoPath) throws IOException {
         final File f = new File(repoPath, ".git");
         if (f.exists()) {
-            repo = new FileRepositoryBuilder()
-                    .setGitDir(new File(repoPath, ".git"))
-                    .setMustExist(true)
-                    .build();
+            repo = new JGitRepository(f);
             listener.setRepo(repo);
             setRepo();
         }

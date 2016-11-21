@@ -1,20 +1,15 @@
 package com.spr.crossgit.repo.local;
 
 import com.spr.crossgit.Prefs;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.spr.crossgit.api.IGitRepository;
 import javafx.concurrent.Task;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.NoWorkTreeException;
-import org.eclipse.jgit.lib.Repository;
 
 public class StatusTask extends Task<String> {
 
-    private final Repository repo;
+    private final IGitRepository repo;
 
-    StatusTask(Repository repo) {
+    StatusTask(IGitRepository repo) {
         this.repo = repo;
     }
 
@@ -25,16 +20,7 @@ public class StatusTask extends Task<String> {
         // is clicked to refresh status.
         Thread.sleep(100);
 
-        try (Git git = new Git(repo)) {
-            // potentially, this can take a while.
-            Status status = git.status().call();
-//            debugStatus(status);
-            return status.hasUncommittedChanges()
-                    ? "[ uncommitted changes ]" : "";
-        } catch (GitAPIException | NoWorkTreeException ex) {
-            Logger.getLogger(LocalRepoPane.class.getName()).log(Level.SEVERE, null, ex);
-            return ex.getMessage();
-        }
+        return repo.hasUnCommittedChanges() ? "[ uncommitted changes ]" : "";
     }
 
     private void debugStatus(Status status) {

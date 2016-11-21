@@ -1,5 +1,6 @@
 package com.spr.crossgit.screen.commit;
 
+import com.spr.crossgit.api.IGitRepository;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -23,23 +24,23 @@ import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 public class DiffTask extends Task<String> {
-    
-    private final Repository repo;    
+
+    private final IGitRepository<Repository> repo;
     private final String filePath;
 
-    public DiffTask(Repository repo, String filePath) {
+    public DiffTask(IGitRepository repo, String filePath) {
         this.repo = repo;
         this.filePath = filePath;
     }
-        
+
     private AbstractTreeIterator prepareTreeParser(String objectId) throws IOException {
         // from the commit we can build the tree which allows us to construct the TreeParser
         //noinspection Duplicates
-        try (RevWalk walk = new RevWalk(repo)) {
-            RevCommit commit = walk.parseCommit(repo.resolve(objectId));
+        try (RevWalk walk = new RevWalk(repo.get())) {
+            RevCommit commit = walk.parseCommit(repo.get().resolve(objectId));
             RevTree tree = walk.parseTree(commit.getTree().getId());
             CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
-            try (ObjectReader oldReader = repo.newObjectReader()) {
+            try (ObjectReader oldReader = repo.get().newObjectReader()) {
                 oldTreeParser.reset(oldReader, tree.getId());
             }
             walk.dispose();
@@ -66,9 +67,9 @@ public class DiffTask extends Task<String> {
     protected String call() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (DiffFormatter formatter = new DiffFormatter(out)) {
-            formatter.setRepository(repo);
+            formatter.setRepository(repo.get());
             formatter.setPathFilter(PathFilter.create(filePath));
-            AbstractTreeIterator workTreeItr = new FileTreeIterator(repo);
+            AbstractTreeIterator workTreeItr = new FileTreeIterator(repo.get());
             AbstractTreeIterator commitTreeItr = prepareTreeParser(Constants.HEAD);
             List<DiffEntry> diffEntries = formatter.scan(commitTreeItr, workTreeItr);
             assert diffEntries.size() == 1;

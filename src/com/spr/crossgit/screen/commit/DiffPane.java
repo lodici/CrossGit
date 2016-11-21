@@ -1,5 +1,6 @@
 package com.spr.crossgit.screen.commit;
 
+import com.spr.crossgit.api.IGitRepository;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -9,16 +10,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import static javafx.scene.layout.VBox.setVgrow;
-import org.eclipse.jgit.lib.Repository;
 
 public class DiffPane extends VBox {
-    
-    private final Repository repo;
+
+    private final IGitRepository repo;
     private final TextArea textArea = new TextArea();
     private ExecutorService executor;
     private DiffTask task;
 
-    public DiffPane(Repository repo) {
+    public DiffPane(IGitRepository repo) {
         this.repo = repo;
         textArea.setEditable(false);
         setVgrow(textArea, Priority.ALWAYS);

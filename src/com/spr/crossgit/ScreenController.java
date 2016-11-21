@@ -1,9 +1,10 @@
 package com.spr.crossgit;
 
-import com.spr.crossgit.screen.commit.CommitScreen;
-import com.spr.crossgit.screen.WebBrowserScreen;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.screen.MainScreen;
 import com.spr.crossgit.screen.StartScreen;
+import com.spr.crossgit.screen.WebBrowserScreen;
+import com.spr.crossgit.screen.commit.CommitScreen;
 import java.util.Optional;
 import java.util.Stack;
 import javafx.application.Platform;
@@ -15,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.eclipse.jgit.lib.Repository;
 
 public final class ScreenController {
 
@@ -98,7 +98,7 @@ public final class ScreenController {
     public static void showStartScreen() {
         showScreen(new StartScreen());
     }
-    
+
     public static void showMainScreen() {
         showScreen(new MainScreen());
     }
@@ -107,7 +107,7 @@ public final class ScreenController {
         showScreen(new WebBrowserScreen(url));
     }
 
-    public static void showCommitScreen(Repository repo) {
+    public static void showCommitScreen(IGitRepository repo) {
         showScreen(new CommitScreen(repo));
     }
 

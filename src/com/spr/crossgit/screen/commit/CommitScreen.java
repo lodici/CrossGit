@@ -1,6 +1,7 @@
 package com.spr.crossgit.screen.commit;
 
 import com.spr.crossgit.IScreen;
+import com.spr.crossgit.api.IGitRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -36,18 +37,18 @@ public class CommitScreen implements IScreen {
 
     private final ChangeSetPane csPane;
     private final DiffPane diffPane;
-    private final Repository repo;
+    private final IGitRepository<Repository> repo;
 
-    public CommitScreen(Repository repo) {
-        
-        this.repo = repo;
+    public CommitScreen(IGitRepository aRepo) {
+
+        this.repo = aRepo;
 
 //        debugStatus();
 //        debugDiff();
 
         this.diffPane = new DiffPane(repo);
-        this.csPane = new ChangeSetPane(repo, this);
-        this.csPane.setUnCommittedFiles(repo);
+        this.csPane = new ChangeSetPane(repo.get(), this);
+        this.csPane.setUnCommittedFiles(repo.get());
 
 //        // repo bar.
 //        HBox.setHgrow(localRepoPane, Priority.NEVER);
@@ -78,7 +79,7 @@ public class CommitScreen implements IScreen {
 
         // Layout
 //        root.setTop(toolbar);
-//        root.setLeft(sidebar);        
+//        root.setLeft(sidebar);
         root.setCenter(sp);
 
     }
@@ -100,10 +101,10 @@ public class CommitScreen implements IScreen {
 
     private void debugDiffEntry(DiffEntry diff) {
         try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-            formatter.setRepository(repo);
+            formatter.setRepository(repo.get());
             formatter.setPathFilter(PathFilter.create(diff.getOldPath()));
-            AbstractTreeIterator workTreeItr = new FileTreeIterator(repo);
-            AbstractTreeIterator commitTreeItr = prepareTreeParser(repo, Constants.HEAD);
+            AbstractTreeIterator workTreeItr = new FileTreeIterator(repo.get());
+            AbstractTreeIterator commitTreeItr = prepareTreeParser(repo.get(), Constants.HEAD);
             List<DiffEntry> diffEntries = formatter.scan(commitTreeItr, workTreeItr);
             for (final DiffEntry entry : diffEntries) {
                 System.out.println( "Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId() );
@@ -113,11 +114,11 @@ public class CommitScreen implements IScreen {
             Logger.getLogger(CommitScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void debugDiffEntry0(DiffEntry diff) {
         assert diff != null;
         try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-            formatter.setRepository(repo);
+            formatter.setRepository(repo.get());
             //formatter.setPathFilter(PathFilter.create(diff.getOldPath()));
             formatter.format(diff);
         } catch (IOException ex) {
@@ -126,17 +127,17 @@ public class CommitScreen implements IScreen {
     }
 
     private void debugDiffEntry1(DiffEntry diff) {
-        try (RevWalk walk = new RevWalk(repo)) {
-            RevCommit revCommit =  walk.parseCommit(repo.resolve(Constants.HEAD));
+        try (RevWalk walk = new RevWalk(repo.get())) {
+            RevCommit revCommit =  walk.parseCommit(repo.get().resolve(Constants.HEAD));
             RevTree tree = revCommit.getTree();
-            try (TreeWalk treeWalk = new TreeWalk(repo)) {
+            try (TreeWalk treeWalk = new TreeWalk(repo.get())) {
                 treeWalk.addTree(tree);
                 treeWalk.setRecursive(true);
                 treeWalk.setFilter(PathFilter.create(diff.getOldPath()));
                 if (treeWalk.next()) {
                     System.out.println("ITEM=" + treeWalk.getObjectId(0));
                     try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-                        formatter.setRepository(repo);
+                        formatter.setRepository(repo.get());
 //                        formatter.setPathFilter(PathFilter.create(diff.getOldPath()));
                         formatter.format(diff);
                     }
@@ -152,7 +153,7 @@ public class CommitScreen implements IScreen {
     // shows differences between the work directory and the index.
     //
     private void debugDiff() {
-        try (final Git git = new Git(repo)) {
+        try (final Git git = new Git(repo.get())) {
 //            List<DiffEntry> diffs = git.diff().setOutputStream(System.out).call();
             List<DiffEntry> diffs = git.diff().call();
             for (DiffEntry diff : diffs) {
@@ -169,7 +170,7 @@ public class CommitScreen implements IScreen {
 
     private void debugStatus() {
 
-        try (Git git = new Git(repo)) {
+        try (Git git = new Git(repo.get())) {
             Status status = git.status().call();
             Set<String> conflicting = status.getConflicting();
             for (String conflict : conflicting) {
@@ -220,7 +221,7 @@ public class CommitScreen implements IScreen {
             for (Map.Entry<String, StageState> entry : conflictingStageState.entrySet()) {
                 System.out.println("ConflictingState: " + entry);
             }
-        
+
         } catch (GitAPIException ex) {
             Logger.getLogger(CommitScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -228,7 +229,7 @@ public class CommitScreen implements IScreen {
 
     @Override
     public Parent getRoot() {
-        return root; 
+        return root;
     }
 
     void showFileDiff(String path) {
