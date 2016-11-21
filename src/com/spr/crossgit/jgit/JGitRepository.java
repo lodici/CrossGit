@@ -90,8 +90,7 @@ public class JGitRepository implements IGitRepository {
         return new ArrayList<>();
     }
 
-    @Override
-    public Ref getRef(String name) {
+    private Ref getRef(String name) {
         try {
             return name.contains("/") ? repo.exactRef(name) : repo.findRef(name);
         } catch (IOException ex) {

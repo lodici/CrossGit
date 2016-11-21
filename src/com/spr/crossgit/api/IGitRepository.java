@@ -11,7 +11,6 @@ public interface IGitRepository {
     public boolean hasUnCommittedChanges();
     public String getRemoteUrl();
     public Iterable<Ref> getRemoteRefs();
-    public Ref getRef(String name);
     public ObservableList<ChangeSetFile> getChangesetFiles(GitCommit gitCommit);
     public BranchesInfo getBranches();
     public ObservableList<IGitTag> getTags();
