@@ -1,5 +1,6 @@
 package com.spr.crossgit;
 
+import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.branches.BranchesInfo;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -53,7 +54,7 @@ public class GitCommit {
     public final String getAuthor() {
         return revCommit.getAuthorIdent().getName();
     }
-   
+
     public final String getMessage() {
         return messageProperty().get();
     }
@@ -108,6 +109,10 @@ public class GitCommit {
 
     public boolean isEqualTo(Ref ref) {
         return revCommit.getId().equals(ref.getObjectId());
+    }
+
+    public boolean isHeadOf(IGitBranch branch) {
+        return revCommit.getId().equals(branch.getId());
     }
 
 }

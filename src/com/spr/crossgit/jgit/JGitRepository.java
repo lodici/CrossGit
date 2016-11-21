@@ -1,9 +1,10 @@
 package com.spr.crossgit.jgit;
 
 import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.api.IGitTag;
-import com.spr.crossgit.branches.BranchesInfo;
 import com.spr.crossgit.changeset.ChangeSetFile;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
 import com.spr.crossgit.screen.commit.CommitScreen;
@@ -21,8 +22,6 @@ import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -121,16 +120,16 @@ public class JGitRepository implements IGitRepository {
         return FXCollections.emptyObservableList();
     }
 
-    @Override
-    public BranchesInfo getBranches() {
-        try (Git git = new Git(repo)) {
-            ListBranchCommand cmd = git.branchList();
-            List<Ref> branches = cmd.call();
-            return new BranchesInfo(branches, repo, git);
-        } catch (GitAPIException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+//    @Override
+//    public BranchesInfo getBranches() {
+//        try (Git git = new Git(repo)) {
+//            ListBranchCommand cmd = git.branchList();
+//            List<Ref> branches = cmd.call();
+//            return new BranchesInfo(branches, repo, git);
+//        } catch (GitAPIException ex) {
+//            throw new RuntimeException(ex);
+//        }
+//    }
 
     @Override
     public ObservableList<IGitTag> getTags() {
@@ -147,21 +146,21 @@ public class JGitRepository implements IGitRepository {
     }
 
     @Override
-    public ObservableList<GitCommit> getAllCommits(BranchesInfo branches) {
-        try (Git git = new Git(repo)) {
-            LogCommand cmd = git.log().all(); // .add(branchInfo.getRefsList().get(7).getObjectId());
-            List<GitCommit> gitCommits = new ArrayList<>();
-            Iterable<RevCommit> revCommits = cmd.call();
-            for (RevCommit revCommit : revCommits) {
-                final GitCommit gitCommit = new GitCommit(
-                        revCommit, git, branches
-                );
-                gitCommits.add(gitCommit);
-            }
-            return FXCollections.observableArrayList(gitCommits);
-        } catch (IOException | GitAPIException ex) {
-            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public ObservableList<IGitCommit> getAllCommits() {
+//        try (Git git = new Git(repo)) {
+//            LogCommand cmd = git.log().all(); // .add(branchInfo.getRefsList().get(7).getObjectId());
+//            List<GitCommit> gitCommits = new ArrayList<>();
+//            Iterable<RevCommit> revCommits = cmd.call();
+//            for (RevCommit revCommit : revCommits) {
+//                final GitCommit gitCommit = new GitCommit(
+//                        revCommit, git, branches
+//                );
+//                gitCommits.add(gitCommit);
+//            }
+//            return FXCollections.observableArrayList(gitCommits);
+//        } catch (IOException | GitAPIException ex) {
+//            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return FXCollections.emptyObservableList();
     }
 
@@ -230,5 +229,48 @@ public class JGitRepository implements IGitRepository {
             Logger.getLogger(CommitScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+
+    @Override
+    public ObservableList<IGitBranch> getBranches() {
+        try (Git git = new Git(repo)) {
+            return FXCollections.observableArrayList(
+                    git.branchList().call().stream()
+                        .map(ref -> new JGitBranch(ref))
+                        .collect(Collectors.toList())
+            );
+        } catch (GitAPIException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return FXCollections.emptyObservableList();
+    }
+
+    private Ref getCurrentBranch() throws IOException {
+        return repo.exactRef(repo.getFullBranch());
+    }
+
+    @Override
+    public boolean isCurrentBranch(IGitBranch branch) {
+        try {
+            return branch.getId().equals(getCurrentBranch().getObjectId());
+        } catch (IOException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    @Override
+    public List<IGitBranch> getBranchHeadsAt(IGitCommit commit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<IGitTag> getTagsAt(IGitCommit commit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isCurrentBranchHead(IGitCommit commit) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

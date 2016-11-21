@@ -1,10 +1,10 @@
 package com.spr.crossgit.commits;
 
-import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.screen.MainScreen;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
@@ -12,9 +12,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
-import org.eclipse.jgit.lib.Ref;
 
-class CommitsTable extends TableView<GitCommit> {
+class CommitsTable extends TableView<IGitCommit> {
 
     CommitsTable(final MainScreen app) {
         setDefaultProperties();
@@ -36,12 +35,12 @@ class CommitsTable extends TableView<GitCommit> {
     }
 
     private void setSelectListener(MainScreen app) {
-        getSelectionModel().selectedItemProperty() .addListener(new ChangeListener<GitCommit>() {
+        getSelectionModel().selectedItemProperty() .addListener(new ChangeListener<IGitCommit>() {
             @Override
-            public void changed(ObservableValue<? extends GitCommit> observable, GitCommit oldValue, GitCommit newValue) {
+            public void changed(ObservableValue<? extends IGitCommit> observable, IGitCommit oldValue, IGitCommit newValue) {
                 app.onSelectCommit(newValue);
             }
-        });        
+        });
     }
 
     void selectFirstRow() {
@@ -58,7 +57,7 @@ class CommitsTable extends TableView<GitCommit> {
     }
 
     private void addComitterColumn() {
-        TableColumn<GitCommit, GitCommit> col = new TableColumn<>("Commits");
+        TableColumn<IGitCommit, IGitCommit> col = new TableColumn<>("Commits");
         col.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
         col.setCellFactory(c -> new CommitterTableCell());
         col.setMaxWidth(110);
@@ -69,7 +68,7 @@ class CommitsTable extends TableView<GitCommit> {
     }
 
     private void addMessageColumn() {
-        TableColumn<GitCommit, GitCommit> col = new TableColumn<>();
+        TableColumn<IGitCommit, IGitCommit> col = new TableColumn<>();
         col.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
         col.setCellFactory(c -> new MessageTableCell());
         col.setSortable(false);
@@ -93,15 +92,15 @@ class CommitsTable extends TableView<GitCommit> {
         return vf.getLastVisibleCell().getIndex() - vf.getFirstVisibleCell().getIndex();
     }
 
-    void select(Ref ref) {
-        Optional<GitCommit> commit = getItems().stream()
-                .filter(c -> c.isEqualTo(ref))
-                .findFirst();
-        if (commit.isPresent()) {
-            getSelectionModel().select(commit.get());
-            int visibleRows = getNumberOfVisibleRows();
-            scrollTo(getSelectionModel().getSelectedIndex() - (visibleRows / 2));
-        }
+    void select(IGitBranch branch) {
+//        Optional<GitCommit> commit = getItems().stream()
+//                .filter(c -> c.isHeadOf(branch))
+//                .findFirst();
+//        if (commit.isPresent()) {
+//            getSelectionModel().select(commit.get());
+//            int visibleRows = getNumberOfVisibleRows();
+//            scrollTo(getSelectionModel().getSelectedIndex() - (visibleRows / 2));
+//        }
     }
-    
+
 }

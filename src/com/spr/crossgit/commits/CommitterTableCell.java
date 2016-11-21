@@ -1,12 +1,12 @@
 package com.spr.crossgit.commits;
 
-import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.IGitCommit;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.VBox;
 
-class CommitterTableCell extends TableCell<GitCommit, GitCommit> {
+class CommitterTableCell extends TableCell<IGitCommit, IGitCommit> {
 
     private final VBox graphic = new VBox();
     private final Label dateLabel = new Label();
@@ -19,7 +19,7 @@ class CommitterTableCell extends TableCell<GitCommit, GitCommit> {
     }
 
     @Override
-    protected void updateItem(GitCommit item, boolean empty) {
+    protected void updateItem(IGitCommit item, boolean empty) {
         super.updateItem(item, empty);
         if (empty) {
             setGraphic(null);

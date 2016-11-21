@@ -1,11 +1,12 @@
 package com.spr.crossgit.screen;
 
-import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.IScreen;
 import com.spr.crossgit.MainApp;
 import com.spr.crossgit.ScreenController;
+import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
-import com.spr.crossgit.branches.BranchesInfo;
 import com.spr.crossgit.branches.BranchesPane;
 import com.spr.crossgit.changeset.ChangeSetPane;
 import com.spr.crossgit.commits.CommitsPane;
@@ -29,7 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class MainScreen implements IScreen {
+public class MainScreen implements IScreen, IBranchListener {
 
     private final BorderPane root = new BorderPane();
 
@@ -54,7 +55,8 @@ public class MainScreen implements IScreen {
         remoteRepoPane = new RemoteRepoPane();
         tagsPane = new TagsPane(this);
 
-        branchesPane.addListener(commitsPane);
+//        branchesPane.addListener(commitsPane);
+        branchesPane.addListener(this);
 
         sidebar.setVisible(false);
         splitPane.setVisible(false);
@@ -125,9 +127,9 @@ public class MainScreen implements IScreen {
         }
     }
 
-    public void onSelectCommit(GitCommit newValue) {
+    public void onSelectCommit(IGitCommit newValue) {
         if (newValue != null) {
-            changesetPane.setCommit(repo, newValue);
+//            changesetPane.setCommit(repo, newValue);
         }
     }
 
@@ -146,14 +148,22 @@ public class MainScreen implements IScreen {
         splitPane.setVisible(true);
     }
 
-    public void setBranches(BranchesInfo info) {
-        branchesTab.setText("Branches: " + info.getBranchesTotal());
-        commitsPane.setRepo(repo, info);
-    }
+//    public void setBranches(BranchesInfo info) {
+//        branchesTab.setText("Branches: " + info.getBranchesTotal());
+//        commitsPane.setRepo(repo, info);
+//    }
 
     @Override
     public Parent getRoot() {
         return root;
+    }
+
+    @Override
+    public void setBranch(IGitBranch branch) {
+        if (branchesTab.getText().equals("Branches: ...")) {
+            branchesTab.setText("Branches: " + branchesPane.getTotal());
+        }
+        commitsPane.setRepo(repo, branch);
     }
 
 }

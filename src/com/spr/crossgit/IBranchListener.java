@@ -1,9 +1,7 @@
 package com.spr.crossgit;
 
-import org.eclipse.jgit.lib.Ref;
+import com.spr.crossgit.api.IGitBranch;
 
 public interface IBranchListener {
-
-    public void setBranchRef(Ref ref);
-
+    public void setBranch(IGitBranch branch);
 }

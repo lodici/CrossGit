@@ -1,9 +1,9 @@
 package com.spr.crossgit.commits;
 
-import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.IBranchListener;
+import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
-import com.spr.crossgit.branches.BranchesInfo;
 import com.spr.crossgit.screen.MainScreen;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
@@ -15,7 +15,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.eclipse.jgit.lib.Ref;
 
 public class CommitsPane extends VBox
     implements IBranchListener {
@@ -40,8 +39,7 @@ public class CommitsPane extends VBox
         getChildren().addAll(headerLabel, commitsTable);
     }
 
-    public void setRepo(IGitRepository repo, BranchesInfo info) {
-
+    public void setRepo(IGitRepository repo, IGitBranch branch) {
         if (this.repo != null && this.repo == repo) {
             return;
         }
@@ -53,9 +51,9 @@ public class CommitsPane extends VBox
         headerLabel.setText("Loading commits...");
         commitsTable.setItems(FXCollections.emptyObservableList());
         commitsTable.hideHeader();
-        task = new CommitsTask(repo, info);
+        task = new CommitsTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
-            final ObservableList<GitCommit> commits = task.getValue();
+            final ObservableList<IGitCommit> commits = task.getValue();
             commitsTable.setItems(commits);
             commitsTable.selectFirstRow();
             headerLabel.setText(String.format("Commits: %s",
@@ -70,10 +68,40 @@ public class CommitsPane extends VBox
         executor.shutdown();
     }
 
+//    public void setRepo(IGitRepository repo, BranchesInfo info) {
+//
+//        if (this.repo != null && this.repo == repo) {
+//            return;
+//        }
+//        this.repo = repo;
+//
+//        if (task != null && task.isRunning()) {
+//            task.cancel();
+//        }
+//        headerLabel.setText("Loading commits...");
+//        commitsTable.setItems(FXCollections.emptyObservableList());
+//        commitsTable.hideHeader();
+//        task = new CommitsTask(repo);
+//        task.setOnSucceeded((WorkerStateEvent event) -> {
+//            final ObservableList<GitCommit> commits = task.getValue();
+//            commitsTable.setItems(commits);
+//            commitsTable.selectFirstRow();
+//            headerLabel.setText(String.format("Commits: %s",
+//                    NumberFormat.getInstance().format(commits.size()))
+//            );
+//        });
+//        if (executor != null && !executor.isTerminated()) {
+//            executor.shutdownNow();
+//        }
+//        executor = Executors.newSingleThreadExecutor();
+//        executor.submit(task);
+//        executor.shutdown();
+//    }
+
     @Override
-    public void setBranchRef(Ref ref) {
+    public void setBranch(IGitBranch branch) {
         Platform.runLater(() -> {
-            commitsTable.select(ref);
+            commitsTable.select(branch);
         });
     }
 }

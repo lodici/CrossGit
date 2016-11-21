@@ -1,6 +1,7 @@
 package com.spr.crossgit.branches;
 
 import com.spr.crossgit.IBranchListener;
+import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,36 +10,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import org.eclipse.jgit.lib.Ref;
 
-class BranchesList extends ListView<Ref> {
+class BranchesList extends ListView<IGitBranch> {
 
-    private String currentBranch;
     private final List<IBranchListener> listeners = new ArrayList<>();
 
-    BranchesList() {
-
-        // each item in the list is a Ref but display just the branch name.
-        setCellFactory(lv -> new ListCell<Ref>() {
-            @Override
-            protected void updateItem(Ref item, boolean empty) {
-                super.updateItem(item, empty);
-                final String name = empty ? "" : item.getName().replaceAll("refs/heads/", "");
-                setText(name);
-                super.setStyle(name.equals(currentBranch)
-                            ? "-fx-text-fill: white; -fx-font-weight: bold;"
-                            : "-fx-text-fill: #cccccc;"
-                );
-            }
-        });
-    }
-
     private void setChangeListener() {
-        getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ref>() {
+        getSelectionModel().selectedItemProperty().addListener(new ChangeListener<IGitBranch>() {
             @Override
-            public void changed(ObservableValue<? extends Ref> observable, Ref oldValue, Ref newValue) {
+            public void changed(ObservableValue<? extends IGitBranch> observable, IGitBranch oldValue, IGitBranch newValue) {
                 if (newValue != null && !newValue.equals(oldValue)) {
-                    listeners.forEach(l -> l.setBranchRef(newValue));
+                    listeners.forEach(l -> l.setBranch(newValue));
                 }
             }
         });
@@ -53,8 +35,26 @@ class BranchesList extends ListView<Ref> {
         }
     }
 
-    void setItems(IGitRepository repo, ObservableList<Ref> branches) {
-        super.setItems(branches);
-        this.currentBranch = repo.getBranch();
+    private void setCellFactory(IGitRepository repo) {
+        setCellFactory(lv -> new ListCell<IGitBranch>() {
+            @Override
+            protected void updateItem(IGitBranch branch, boolean empty) {
+                super.updateItem(branch, empty);
+                if (!empty) {
+                    setText(branch.getName());
+                    super.setStyle(repo.isCurrentBranch(branch)
+                        ? "-fx-text-fill: white; -fx-font-weight: bold;"
+                        : "-fx-text-fill: #cccccc;"
+                    );
+                } else {
+                    setText("");
+                }
+            }
+        });
+    }
+
+    void setItems(ObservableList<IGitBranch> branches, IGitRepository repo) {
+        setCellFactory(repo);
+        setItems(branches);
     }
 }

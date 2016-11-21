@@ -1,12 +1,14 @@
 package com.spr.crossgit.commits;
 
-import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.ScreenController;
+import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitCommit;
+import com.spr.crossgit.api.IGitTag;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -14,19 +16,23 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.FlowPane;
-import org.eclipse.jgit.lib.Ref;
 
-class MessageTableCell extends TableCell<GitCommit, GitCommit> {
+class MessageTableCell extends TableCell<IGitCommit, IGitCommit> {
 
     private static final Pattern ISSUE_PATTERN = Pattern.compile("\\#+([0-9]+)");
 
-    private GitCommit commit;
-    
+//    private IGitCommit commit;
+//    private IGitRepository repo;
+
+//    public MessageTableCell(final IGitRepository repo) {
+//        this.repo = repo;
+//    }
+
     @Override
-    protected void updateItem(GitCommit commit, boolean empty) {
+    protected void updateItem(IGitCommit commit, boolean empty) {
 
         super.updateItem(commit, empty);
-        this.commit = commit;
+//        this.commit = commit;
 
         if (empty) {
             setGraphic(null);
@@ -53,7 +59,7 @@ class MessageTableCell extends TableCell<GitCommit, GitCommit> {
 
     private Label getRefLabel(String text) {
         final Label lbl = new Label(text);
-        lbl.setStyle("-fx-background-color: " + (commit.isOnActiveBranch() ? "white;" : "#999999;")
+        lbl.setStyle("-fx-background-color: #999999;" // + (repo.isCurrentBranchHead(commit) ? "white;" : "#999999;")
                 + "-fx-text-fill: #333333;"
                 + "-fx-padding: 0 4 0 4;"
                 + "-fx-background-radius: 4;"
@@ -63,10 +69,14 @@ class MessageTableCell extends TableCell<GitCommit, GitCommit> {
         return lbl;
     }
 
-    private Label getRefLabel(Ref ref) {
-        return getRefLabel(ref.getName().replaceAll("refs/heads/", ""));
+    private Label getRefLabel(IGitBranch branch) {
+        return getRefLabel(branch.getName().replaceAll("refs/heads/", ""));
     }
-    
+
+    private Label getRefLabel(IGitTag tag) {
+        return getRefLabel(tag.getName().replaceAll("refs/tags/", ""));
+    }
+
     private boolean isGitHubIssueNumber(String s) {
         return s.contains("#");
     }
@@ -102,16 +112,18 @@ class MessageTableCell extends TableCell<GitCommit, GitCommit> {
         }
     }
 
-    private Collection<Node> getBranchNames(GitCommit commit) {
-        return commit.getHeadRefs().stream()
-                .map(ref -> getRefLabel(ref))
-                .collect(Collectors.toList());
+    private Collection<Node> getBranchNames(IGitCommit commit) {
+        return new ArrayList<>();
+//        return repo.getBranchHeadsAt(commit).stream()
+//                .map(b -> getRefLabel(b))
+//                .collect(Collectors.toList());
     }
 
-    private Collection<Node> getTagNames(GitCommit commit) {
-        return commit.getTagsList().stream()
-                .map(s -> getRefLabel(s.replaceAll("refs/heads/", "")))
-                .collect(Collectors.toList());
+    private Collection<Node> getTagNames(IGitCommit commit) {
+        return new ArrayList<>();
+//        return repo.getTagsAt(commit).stream()
+//                .map(t -> getRefLabel(t))
+//                .collect(Collectors.toList());
     }
 
 }

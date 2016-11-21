@@ -1,9 +1,11 @@
 package com.spr.crossgit.branches;
 
+import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitRepository;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-class BranchesTask extends Task<BranchesInfo> {
+class BranchesTask extends Task<ObservableList<IGitBranch>> {
 
     private final IGitRepository repo;
 
@@ -12,7 +14,7 @@ class BranchesTask extends Task<BranchesInfo> {
     }
 
     @Override
-    protected BranchesInfo call() throws Exception {
+    protected ObservableList<IGitBranch> call() throws Exception {
         return repo.getBranches();
     }
 
