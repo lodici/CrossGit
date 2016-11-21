@@ -5,6 +5,7 @@ import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.api.IGitTag;
+import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.changeset.ChangeSetFile;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
 import com.spr.crossgit.screen.commit.CommitScreen;
@@ -236,7 +237,7 @@ public class JGitRepository implements IGitRepository {
         try (Git git = new Git(repo)) {
             return FXCollections.observableArrayList(
                     git.branchList().call().stream()
-                        .map(ref -> new JGitBranch(ref))
+                        .map(ref -> new JGitBranch(ref, repo))
                         .collect(Collectors.toList())
             );
         } catch (GitAPIException ex) {
@@ -272,5 +273,35 @@ public class JGitRepository implements IGitRepository {
     @Override
     public boolean isCurrentBranchHead(IGitCommit commit) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private int getSortedBranch(BranchSortOrder sortOrder, IGitBranch b1, IGitBranch b2) {
+        switch (sortOrder) {
+        case NAME:
+            return b1.getName().compareToIgnoreCase(b2.getName());
+        case NAME_REVERSED:
+            return b2.getName().compareToIgnoreCase(b1.getName());
+        case DATETIME:
+            return b1.getCommitTime() - b2.getCommitTime();
+        case DATETIME_REVERSED:
+            return b2.getCommitTime() - b1.getCommitTime();
+        default:
+            throw new RuntimeException("Invalid sort order");
+        }
+    }
+
+    @Override
+    public ObservableList<IGitBranch> getBranches(BranchSortOrder sortOrder) {
+        try (Git git = new Git(repo)) {
+            return FXCollections.observableArrayList(
+                    git.branchList().call().stream()
+                        .map(ref -> new JGitBranch(ref, repo))
+                        .sorted((b1, b2) -> getSortedBranch(sortOrder, b1, b2))
+                        .collect(Collectors.toList())
+            );
+        } catch (GitAPIException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return FXCollections.emptyObservableList();
     }
 }

@@ -1,5 +1,6 @@
 package com.spr.crossgit.branches;
 
+import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitRepository;
 import javafx.collections.ObservableList;
@@ -15,7 +16,7 @@ class BranchesTask extends Task<ObservableList<IGitBranch>> {
 
     @Override
     protected ObservableList<IGitBranch> call() throws Exception {
-        return repo.getBranches();
+        return repo.getBranches(BranchSortOrder.getValue());
     }
 
 }

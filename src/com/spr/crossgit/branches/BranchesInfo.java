@@ -1,5 +1,6 @@
 package com.spr.crossgit.branches;
 
+import com.spr.crossgit.api.BranchSortOrder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public class BranchesInfo {
         );
     }
 
-    ObservableList<Ref> getRefsList(SortOrder sortBy) {
+    ObservableList<Ref> getRefsList(BranchSortOrder sortBy) {
         switch (sortBy) {
             case NAME: return getSortedByName();
             case NAME_REVERSED: return getSortedByNameReversed();

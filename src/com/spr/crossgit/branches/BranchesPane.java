@@ -1,13 +1,11 @@
 package com.spr.crossgit.branches;
 
 import com.spr.crossgit.IBranchListener;
-import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.api.IGitRepository;
-import com.spr.crossgit.screen.MainScreen;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
@@ -20,11 +18,9 @@ public class BranchesPane {
     private final BranchesList branchesList = new BranchesList();
     private BranchesTask task;
     private ExecutorService executor;
-//    private final MainScreen app;
-//    private BranchesInfo branchesInfo;
+    private IGitRepository repo;
 
-    public BranchesPane(MainScreen app) {
-//        this.app = app;
+    public BranchesPane() {
         sortBar = new SortButtonBar(this);
         sortBar.setPrefHeight(28.0);
         VBox.setVgrow(branchesList, Priority.ALWAYS);
@@ -35,16 +31,18 @@ public class BranchesPane {
         return pane;
     }
 
-    public void setRepo(IGitRepository repo) {
+    public void setRepo(IGitRepository repo, Runnable r) {
+        this.repo = repo;
         if (task != null && task.isRunning()) {
             task.cancel();
         }
         branchesList.setItems(FXCollections.emptyObservableList());
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
-            ObservableList<IGitBranch> branches = task.getValue();
-            branchesList.setItems(branches, repo);
-//            app.setBranches(branchesInfo);
+            branchesList.setItems(task.getValue());
+            if (r != null) {
+                r.run();
+            }
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
@@ -54,11 +52,18 @@ public class BranchesPane {
         executor.shutdown();
     }
 
-    void setSortOrder(SortOrder sortOrder) {
-        SortOrder.setValue(sortOrder);
-//        branchesList.setItems(repo, branchesInfo.getRefsList(sortOrder));
+    public void setRepo(IGitRepository repo) {
+        setRepo(repo, null);
+    }
+
+    void doPostSortAction() {
         branchesList.scrollTo(0);
         branchesList.requestFocus();
+    }
+
+    void setSortOrder(BranchSortOrder sortOrder) {
+        BranchSortOrder.setValue(sortOrder);
+        setRepo(repo, this::doPostSortAction);
     }
 
     public void addListener(IBranchListener listener) {

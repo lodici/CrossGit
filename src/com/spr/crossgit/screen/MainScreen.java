@@ -49,7 +49,7 @@ public class MainScreen implements IScreen, IBranchListener {
     public MainScreen() {
 
         commitsPane = new CommitsPane(this);
-        branchesPane = new BranchesPane(this);
+        branchesPane = new BranchesPane();
         changesetPane = new ChangeSetPane();
         localRepoPane = new LocalRepoPane(this);
         remoteRepoPane = new RemoteRepoPane();
