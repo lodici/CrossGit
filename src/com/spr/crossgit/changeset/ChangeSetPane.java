@@ -1,6 +1,7 @@
 package com.spr.crossgit.changeset;
 
 import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.IGitRepository;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import static javafx.scene.layout.VBox.setVgrow;
-import org.eclipse.jgit.lib.Repository;
 
 public class ChangeSetPane extends VBox {
 
@@ -40,7 +40,7 @@ public class ChangeSetPane extends VBox {
     // used to remove the default "No content in table" placeholder text.
     private static final Label NO_PLACEHOLDER = new Label();
 
-    public void setCommit(Repository repo, GitCommit commit) {
+    public void setCommit(IGitRepository repo, GitCommit commit) {
         if (task != null && task.isRunning()) {
             task.cancel();
         }
@@ -73,5 +73,5 @@ public class ChangeSetPane extends VBox {
         executor.submit(task);
         executor.shutdown();
     }
-       
+
 }

@@ -1,5 +1,6 @@
 package com.spr.crossgit.repo.remote;
 
+import com.spr.crossgit.api.IGitRepository;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,11 +9,10 @@ import java.util.logging.Logger;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.eclipse.jgit.lib.Repository;
 
 public class RemoteRepoPane extends VBox {
 
-    private Repository repo;
+    private IGitRepository repo;
     private String remoteUrl;
     private final RemoteRepoLink repoLink;
     private final Label statusLabel;
@@ -28,7 +28,7 @@ public class RemoteRepoPane extends VBox {
                 + "-fx-border-radius: 5;"
                 + "-fx-border-color: #cccccc;"
         );
-        
+
         this.repoLink = new RemoteRepoLink(this);
 
         this.statusLabel = new Label();
@@ -41,7 +41,7 @@ public class RemoteRepoPane extends VBox {
         getChildren().addAll(repoLink, statusLabel);
     }
 
-    private void setStatus(Repository repo) throws IOException {
+    private void setStatus(IGitRepository repo) throws IOException {
 
         // TODO: need to fetch first before this becomes meaningful.
         if (true) return;
@@ -60,7 +60,7 @@ public class RemoteRepoPane extends VBox {
                         + ", behind=" + status.commitsBehind);
             }
         });
-        statusTask.setOnFailed((WorkerStateEvent event) -> { 
+        statusTask.setOnFailed((WorkerStateEvent event) -> {
             final Throwable ex = event.getSource().getException();
             Logger.getLogger(RemoteRepoPane.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -74,21 +74,21 @@ public class RemoteRepoPane extends VBox {
         executor.shutdown();
     }
 
-    public void setRepo(Repository repo) throws IOException {
-        this.repo = repo;
-        remoteUrl = repo.getConfig().getString("remote", "origin", "url");
-        repoLink.setText(remoteUrl != null ? "-> " + remoteUrl : "");
-        statusLabel.setText("");
-        if (remoteUrl != null) {
-            setStatus(repo);
-        }
-    }
-
     void setStatus() {
         try {
             setStatus(repo);
         } catch (IOException ex) {
             Logger.getLogger(RemoteRepoPane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void setRepo(IGitRepository r) throws IOException {
+        this.repo = r;
+        remoteUrl = repo.getRemoteUrl();
+        repoLink.setText(remoteUrl != null ? "-> " + remoteUrl : "");
+        statusLabel.setText("");
+        if (remoteUrl != null) {
+            setStatus();
         }
     }
 }

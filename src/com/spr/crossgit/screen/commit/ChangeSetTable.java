@@ -10,15 +10,12 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
-import org.eclipse.jgit.lib.Repository;
 
 class ChangeSetTable extends TableView<String> {
 
-    private final Repository repo;
     private final CommitScreen listener;
 
-    ChangeSetTable(Repository repo, CommitScreen listener) {
-        this.repo = repo;
+    ChangeSetTable(CommitScreen listener) {
         this.listener = listener;
         setDefaultProperties();
         setSelectListener();

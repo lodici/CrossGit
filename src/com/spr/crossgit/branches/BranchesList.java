@@ -1,18 +1,15 @@
 package com.spr.crossgit.branches;
 
 import com.spr.crossgit.IBranchListener;
-import java.io.IOException;
+import com.spr.crossgit.api.IGitRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 class BranchesList extends ListView<Ref> {
 
@@ -56,16 +53,8 @@ class BranchesList extends ListView<Ref> {
         }
     }
 
-    private void setCurrentBranch(Repository repo) {
-        try {
-            this.currentBranch = repo.getBranch();
-        } catch (IOException ex) {
-            Logger.getLogger(BranchesList.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    void setItems(Repository repo, ObservableList<Ref> branches) {
+    void setItems(IGitRepository repo, ObservableList<Ref> branches) {
         super.setItems(branches);
-        setCurrentBranch(repo);
+        this.currentBranch = repo.getBranch();
     }
 }

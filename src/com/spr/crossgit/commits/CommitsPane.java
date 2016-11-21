@@ -2,8 +2,9 @@ package com.spr.crossgit.commits;
 
 import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.IBranchListener;
-import com.spr.crossgit.screen.MainScreen;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.branches.BranchesInfo;
+import com.spr.crossgit.screen.MainScreen;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 public class CommitsPane extends VBox
     implements IBranchListener {
@@ -24,7 +24,7 @@ public class CommitsPane extends VBox
     private final CommitsTable commitsTable;
     private CommitsTask task;
     private final Label headerLabel;
-    private Repository repo;
+    private IGitRepository repo;
 
     public CommitsPane(MainScreen app) {
         this.headerLabel = new Label();
@@ -40,7 +40,7 @@ public class CommitsPane extends VBox
         getChildren().addAll(headerLabel, commitsTable);
     }
 
-    public void setRepo(Repository repo, BranchesInfo info) {
+    public void setRepo(IGitRepository repo, BranchesInfo info) {
 
         if (this.repo != null && this.repo == repo) {
             return;

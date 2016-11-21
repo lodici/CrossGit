@@ -1,5 +1,6 @@
 package com.spr.crossgit.screen.commit;
 
+import com.spr.crossgit.api.IGitRepository;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import static javafx.scene.layout.VBox.setVgrow;
-import org.eclipse.jgit.lib.Repository;
 
 class ChangeSetPane extends VBox {
 
@@ -22,8 +22,8 @@ class ChangeSetPane extends VBox {
     private ExecutorService executor;
     private ChangeSetTask task;
 
-    ChangeSetPane(Repository repo, CommitScreen listener) {
-        this.filesTable = new ChangeSetTable(repo, listener);
+    ChangeSetPane(CommitScreen listener) {
+        this.filesTable = new ChangeSetTable(listener);
         this.headerLabel = new Label();
         headerLabel.setPrefHeight(20.0);
         headerLabel.setStyle(
@@ -39,7 +39,7 @@ class ChangeSetPane extends VBox {
     // used to remove the default "No content in table" placeholder text.
     private static final Label NO_PLACEHOLDER = new Label();
 
-    void setUnCommittedFiles(Repository repo) {
+    void setUnCommittedFiles(IGitRepository repo) {
         if (task != null && task.isRunning()) {
             task.cancel();
         }
@@ -73,5 +73,5 @@ class ChangeSetPane extends VBox {
         executor.submit(task);
         executor.shutdown();
     }
-       
+
 }

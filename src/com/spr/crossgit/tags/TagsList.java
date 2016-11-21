@@ -1,16 +1,16 @@
 package com.spr.crossgit.tags;
 
+import com.spr.crossgit.api.IGitRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 class TagsList extends ListView<Ref> {
 
-    private Repository repo;
+    private IGitRepository repo;
 
     TagsList() {
 
@@ -34,7 +34,7 @@ class TagsList extends ListView<Ref> {
 
     }
 
-    void setItems(Repository repo, ObservableList<Ref> tags) {
+    void setItems(IGitRepository repo, ObservableList<Ref> tags) {
         this.repo = repo;
         super.setItems(tags);
     }

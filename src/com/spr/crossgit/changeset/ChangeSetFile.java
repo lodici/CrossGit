@@ -10,7 +10,7 @@ public class ChangeSetFile {
     private final File file;
     private final ChangeType changeType;
 
-    ChangeSetFile(DiffEntry diff) {
+    public ChangeSetFile(DiffEntry diff) {
 //        System.out.println(MessageFormat.format("({0} {1} {2}",
 //                diff.getChangeType().name(),
 //                diff.getNewMode().getBits(),
@@ -19,16 +19,16 @@ public class ChangeSetFile {
         this.diff = diff;
         this.changeType = diff.getChangeType();
         this.file = new File(changeType == ChangeType.DELETE
-                ? diff.getOldPath() 
+                ? diff.getOldPath()
                 : diff.getNewPath()
         );
     }
 
-    File getFile() {
+    public File getFile() {
         return file;
     }
 
-    ChangeType getChangeType() {
+    public ChangeType getChangeType() {
         return changeType;
     }
 
@@ -51,7 +51,7 @@ public class ChangeSetFile {
         }
     }
 
-    String getStyle() {
+    public String getStyle() {
         switch (changeType) {
             case ADD: return "-fx-text-fill: lightgreen;";
             case DELETE: return "-fx-text-fill: LightCoral;";

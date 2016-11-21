@@ -1,6 +1,7 @@
 package com.spr.crossgit.branches;
 
 import com.spr.crossgit.IBranchListener;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.screen.MainScreen;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 public class BranchesPane {
 
@@ -21,7 +21,7 @@ public class BranchesPane {
     private BranchesTask task;
     private ExecutorService executor;
     private final MainScreen app;
-    private Repository repo;
+    private IGitRepository repo;
     private BranchesInfo branchesInfo;
 
     public BranchesPane(MainScreen app) {
@@ -36,7 +36,7 @@ public class BranchesPane {
         return pane;
     }
 
-    public void setRepo(Repository repo) {
+    public void setRepo(IGitRepository repo) {
         this.repo = repo;
         if (task != null && task.isRunning()) {
             task.cancel();
@@ -45,7 +45,7 @@ public class BranchesPane {
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
             branchesInfo = task.getValue();
-            final ObservableList<Ref> branches = 
+            final ObservableList<Ref> branches =
                     branchesInfo.getRefsList(SortOrder.getValue());
             branchesList.setItems(repo, branches);
             app.setBranches(branchesInfo);

@@ -1,5 +1,6 @@
 package com.spr.crossgit.tags;
 
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.screen.MainScreen;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,7 +10,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 public class TagsPane extends VBox {
 
@@ -25,7 +25,7 @@ public class TagsPane extends VBox {
         getChildren().addAll(tagsList);
     }
 
-    public void setRepo(Repository repo) {
+    public void setRepo(IGitRepository repo) {
         if (task != null && task.isRunning()) {
             task.cancel();
         }

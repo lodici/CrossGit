@@ -41,7 +41,7 @@ public class BranchesInfo {
 
     private Ref currentBranch;
 
-    BranchesInfo(List<Ref> branches, Repository repo, Git git) {
+    public BranchesInfo(List<Ref> branches, Repository repo, Git git) {
         assert !Platform.isFxApplicationThread();
         this.refs = new ArrayList(branches);
         setRefsMap();

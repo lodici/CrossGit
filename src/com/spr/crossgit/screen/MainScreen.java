@@ -28,13 +28,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.eclipse.jgit.lib.Repository;
 
 public class MainScreen implements IScreen {
 
     private final BorderPane root = new BorderPane();
 
-    private IGitRepository<Repository> repo;
+    private IGitRepository repo;
     private final CommitsPane commitsPane;
     private final BranchesPane branchesPane;
     private final ChangeSetPane changesetPane;
@@ -118,7 +117,7 @@ public class MainScreen implements IScreen {
         if (repo != null) {
             try {
                 localRepoPane.setRepo();
-                remoteRepoPane.setRepo(repo.get());
+                remoteRepoPane.setRepo(repo);
             } catch (IOException ex) {
                 Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -128,7 +127,7 @@ public class MainScreen implements IScreen {
 
     public void onSelectCommit(GitCommit newValue) {
         if (newValue != null) {
-            changesetPane.setCommit(repo.get(), newValue);
+            changesetPane.setCommit(repo, newValue);
         }
     }
 
@@ -139,9 +138,9 @@ public class MainScreen implements IScreen {
     public void setRepo(IGitRepository aRepo) {
         this.repo = aRepo;
         branchesTab.setText("Branches: ...");
-        branchesPane.setRepo(repo.get());
+        branchesPane.setRepo(repo);
         tagsTab.setText("Tags: ...");
-        tagsPane.setRepo(repo.get());
+        tagsPane.setRepo(repo);
         setRepoStatus();
         sidebar.setVisible(true);
         splitPane.setVisible(true);
@@ -149,7 +148,7 @@ public class MainScreen implements IScreen {
 
     public void setBranches(BranchesInfo info) {
         branchesTab.setText("Branches: " + info.getBranchesTotal());
-        commitsPane.setRepo(repo.get(), info);
+        commitsPane.setRepo(repo, info);
     }
 
     @Override

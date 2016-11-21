@@ -9,7 +9,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import static javafx.scene.layout.VBox.setVgrow;
 
 public class DiffPane extends VBox {
 
