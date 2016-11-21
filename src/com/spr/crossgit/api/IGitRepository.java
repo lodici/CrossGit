@@ -4,13 +4,11 @@ import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.branches.BranchesInfo;
 import com.spr.crossgit.changeset.ChangeSetFile;
 import javafx.collections.ObservableList;
-import org.eclipse.jgit.lib.Ref;
 
 public interface IGitRepository {
     public String getBranch();
     public boolean hasUnCommittedChanges();
     public String getRemoteUrl();
-    public Iterable<Ref> getRemoteRefs();
     public ObservableList<ChangeSetFile> getChangesetFiles(GitCommit gitCommit);
     public BranchesInfo getBranches();
     public ObservableList<IGitTag> getTags();

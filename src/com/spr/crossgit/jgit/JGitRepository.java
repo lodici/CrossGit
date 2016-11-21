@@ -78,8 +78,7 @@ public class JGitRepository implements IGitRepository {
         return repo.getConfig().getString("remote", "origin", "url");
     }
 
-    @Override
-    public Iterable<Ref> getRemoteRefs() {
+    private Iterable<Ref> getRemoteRefs() {
         try (Git git = new Git(repo)) {
             return git.lsRemote()
                     .setHeads(true)
