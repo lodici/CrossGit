@@ -1,11 +1,11 @@
 package com.spr.crossgit.tags;
 
 import com.spr.crossgit.api.IGitRepository;
+import com.spr.crossgit.api.IGitTag;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import org.eclipse.jgit.lib.Ref;
 
-public class TagsTask extends Task<ObservableList<Ref>> {
+public class TagsTask extends Task<ObservableList<IGitTag>> {
 
     private final IGitRepository repo;
 
@@ -14,7 +14,7 @@ public class TagsTask extends Task<ObservableList<Ref>> {
     }
 
     @Override
-    protected ObservableList<Ref> call() throws Exception {
+    protected ObservableList<IGitTag> call() throws Exception {
         return repo.getTags();
     }
 

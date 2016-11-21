@@ -2,6 +2,7 @@ package com.spr.crossgit.jgit;
 
 import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.api.IGitRepository;
+import com.spr.crossgit.api.IGitTag;
 import com.spr.crossgit.branches.BranchesInfo;
 import com.spr.crossgit.changeset.ChangeSetFile;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
@@ -21,7 +22,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.ListTagCommand;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -135,11 +135,13 @@ public class JGitRepository implements IGitRepository {
     }
 
     @Override
-    public ObservableList<Ref> getTags() {
+    public ObservableList<IGitTag> getTags() {
         try (Git git = new Git(repo)) {
-            ListTagCommand cmd = git.tagList();
-            List<Ref> tags = cmd.call();
-            return FXCollections.observableArrayList(tags);
+            return FXCollections.observableArrayList(
+                    git.tagList().call().stream()
+                        .map(ref -> new JGitTag(ref))
+                        .collect(Collectors.toList())
+            );
         } catch (GitAPIException ex) {
             Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -213,7 +215,7 @@ public class JGitRepository implements IGitRepository {
         }
         return newText;
     }
-    
+
     @Override
     public String getUnifiedDiff(String filePath) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

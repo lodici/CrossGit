@@ -1,40 +1,39 @@
 package com.spr.crossgit.tags;
 
 import com.spr.crossgit.api.IGitRepository;
+import com.spr.crossgit.api.IGitTag;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import org.eclipse.jgit.lib.Ref;
 
-class TagsList extends ListView<Ref> {
+class TagsList extends ListView<IGitTag> {
 
     private IGitRepository repo;
 
     TagsList() {
 
         // branches listview
-        getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ref>() {
+        getSelectionModel().selectedItemProperty().addListener(new ChangeListener<IGitTag>() {
             @Override
-            public void changed(ObservableValue<? extends Ref> observable, Ref oldValue, Ref newValue) {
+            public void changed(ObservableValue<? extends IGitTag> observable, IGitTag oldValue, IGitTag newValue) {
                 // TO DO
             }
         });
 
         // each item in the list is a File but display just the file name.
-        setCellFactory(lv -> new ListCell<Ref>() {
+        setCellFactory(lv -> new ListCell<IGitTag>() {
             @Override
-            protected void updateItem(Ref item, boolean empty) {
-                super.updateItem(item, empty);
-                final String name = empty ? "" : item.getName().replaceAll("refs/tags/", "");
-                setText(name);
+            protected void updateItem(IGitTag tag, boolean empty) {
+                super.updateItem(tag, empty);
+                setText(empty ? "" : tag.getName());
             }
         });
 
     }
 
-    void setItems(IGitRepository repo, ObservableList<Ref> tags) {
+    void setItems(IGitRepository repo, ObservableList<IGitTag> tags) {
         this.repo = repo;
         super.setItems(tags);
     }

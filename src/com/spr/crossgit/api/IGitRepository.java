@@ -14,7 +14,7 @@ public interface IGitRepository {
     public Ref getRef(String name);
     public ObservableList<ChangeSetFile> getChangesetFiles(GitCommit gitCommit);
     public BranchesInfo getBranches();
-    public ObservableList<Ref> getTags();
+    public ObservableList<IGitTag> getTags();
     public ObservableList<GitCommit> getAllCommits(BranchesInfo branches);
     public ObservableList<String> getChangesetFiles();
     public String getUnifiedDiff(String filePath);
