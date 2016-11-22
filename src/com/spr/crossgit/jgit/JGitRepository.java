@@ -1,11 +1,11 @@
 package com.spr.crossgit.jgit;
 
 import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.api.IGitTag;
-import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.changeset.ChangeSetFile;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
 import com.spr.crossgit.screen.commit.CommitScreen;
@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -148,20 +149,18 @@ public class JGitRepository implements IGitRepository {
 
     @Override
     public ObservableList<IGitCommit> getAllCommits() {
-//        try (Git git = new Git(repo)) {
-//            LogCommand cmd = git.log().all(); // .add(branchInfo.getRefsList().get(7).getObjectId());
-//            List<GitCommit> gitCommits = new ArrayList<>();
-//            Iterable<RevCommit> revCommits = cmd.call();
-//            for (RevCommit revCommit : revCommits) {
-//                final GitCommit gitCommit = new GitCommit(
-//                        revCommit, git, branches
-//                );
-//                gitCommits.add(gitCommit);
-//            }
-//            return FXCollections.observableArrayList(gitCommits);
-//        } catch (IOException | GitAPIException ex) {
-//            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try (Git git = new Git(repo)) {
+            LogCommand cmd = git.log().all(); // .add(branchInfo.getRefsList().get(7).getObjectId());
+            List<IGitCommit> gitCommits = new ArrayList<>();
+            Iterable<RevCommit> revCommits = cmd.call();
+            for (RevCommit revCommit : revCommits) {
+                final JGitCommit gitCommit = new JGitCommit(revCommit);
+                gitCommits.add(gitCommit);
+            }
+            return FXCollections.observableArrayList(gitCommits);
+        } catch (IOException | GitAPIException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return FXCollections.emptyObservableList();
     }
 
@@ -260,14 +259,38 @@ public class JGitRepository implements IGitRepository {
         }
     }
 
+    private List<IGitBranch> getHeadRefs(String commitHash) {
+        try (Git git = new Git(repo)) {
+            return git.branchList().call().stream()
+                .filter(ref -> ref.getObjectId().name().equals(commitHash))
+                .map(ref -> new JGitBranch(ref, repo))
+                .collect(Collectors.toList());
+        } catch (GitAPIException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
+    }
+
     @Override
     public List<IGitBranch> getBranchHeadsAt(IGitCommit commit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getHeadRefs(commit.getHash());
+    }
+
+    private List<IGitTag> getTagsPointingTo(IGitCommit commit) {
+        try (Git git = new Git(repo)) {
+            return git.tagList().call().stream()
+                .filter(ref -> ref.getObjectId().name().equals(commit.getHash()))
+                .map(ref -> new JGitTag(ref))
+                .collect(Collectors.toList());
+        } catch (GitAPIException ex) {
+            Logger.getLogger(JGitRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public List<IGitTag> getTagsAt(IGitCommit commit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getTagsPointingTo(commit);
     }
 
     @Override

@@ -148,11 +148,6 @@ public class MainScreen implements IScreen, IBranchListener {
         splitPane.setVisible(true);
     }
 
-//    public void setBranches(BranchesInfo info) {
-//        branchesTab.setText("Branches: " + info.getBranchesTotal());
-//        commitsPane.setRepo(repo, info);
-//    }
-
     @Override
     public Parent getRoot() {
         return root;

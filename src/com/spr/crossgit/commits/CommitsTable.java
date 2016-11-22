@@ -2,13 +2,16 @@ package com.spr.crossgit.commits;
 
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.screen.MainScreen;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
@@ -52,8 +55,6 @@ class CommitsTable extends TableView<IGitCommit> {
     private void setDefaultProperties() {
         setFixedCellSize(44.0);
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        addComitterColumn();
-        addMessageColumn();
     }
 
     private void addComitterColumn() {
@@ -67,10 +68,10 @@ class CommitsTable extends TableView<IGitCommit> {
         getColumns().add(col);
     }
 
-    private void addMessageColumn() {
+    private void addMessageColumn(IGitRepository repo) {
         TableColumn<IGitCommit, IGitCommit> col = new TableColumn<>();
         col.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
-        col.setCellFactory(c -> new MessageTableCell());
+        col.setCellFactory(c -> new MessageTableCell(repo));
         col.setSortable(false);
         col.setEditable(false);
 
@@ -93,14 +94,26 @@ class CommitsTable extends TableView<IGitCommit> {
     }
 
     void select(IGitBranch branch) {
-//        Optional<GitCommit> commit = getItems().stream()
-//                .filter(c -> c.isHeadOf(branch))
-//                .findFirst();
-//        if (commit.isPresent()) {
-//            getSelectionModel().select(commit.get());
-//            int visibleRows = getNumberOfVisibleRows();
-//            scrollTo(getSelectionModel().getSelectedIndex() - (visibleRows / 2));
-//        }
+        Optional<IGitCommit> commit = getItems().stream()
+                .filter(c -> c.isHeadOf(branch))
+                .findFirst();
+        if (commit.isPresent()) {
+            getSelectionModel().select(commit.get());
+            int visibleRows = getNumberOfVisibleRows();
+            scrollTo(getSelectionModel().getSelectedIndex() - (visibleRows / 2));
+        }
+    }
+
+    private void setTableColumns(IGitRepository repo) {
+        addComitterColumn();
+        addMessageColumn(repo);
+    }
+
+    void setItems(ObservableList<IGitCommit> commits, IGitRepository repo) {
+        if (getColumns().isEmpty()) {
+            setTableColumns(repo);
+        }
+        setItems(commits);
     }
 
 }

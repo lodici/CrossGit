@@ -3,12 +3,12 @@ package com.spr.crossgit.commits;
 import com.spr.crossgit.ScreenController;
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
+import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.api.IGitTag;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -21,18 +21,16 @@ class MessageTableCell extends TableCell<IGitCommit, IGitCommit> {
 
     private static final Pattern ISSUE_PATTERN = Pattern.compile("\\#+([0-9]+)");
 
-//    private IGitCommit commit;
-//    private IGitRepository repo;
+    private final IGitRepository repo;
 
-//    public MessageTableCell(final IGitRepository repo) {
-//        this.repo = repo;
-//    }
+    public MessageTableCell(IGitRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     protected void updateItem(IGitCommit commit, boolean empty) {
 
         super.updateItem(commit, empty);
-//        this.commit = commit;
 
         if (empty) {
             setGraphic(null);
@@ -43,8 +41,8 @@ class MessageTableCell extends TableCell<IGitCommit, IGitCommit> {
 
             final FlowPane flowPane = new FlowPane();
             flowPane.setHgap(4.0);
-            flowPane.getChildren().addAll(getBranchNames(commit));
-            flowPane.getChildren().addAll(getTagNames(commit));
+            flowPane.getChildren().addAll(getBranchLabels(commit));
+            flowPane.getChildren().addAll(getTagLabels(commit));
 
             final String[] parts = msg.split(" ");
             Stream.of(parts).forEach(part
@@ -95,7 +93,6 @@ class MessageTableCell extends TableCell<IGitCommit, IGitCommit> {
         if (m.find()) {
             final String url = "https://github.com/magarena/magarena/issues/"
                     + m.group(1);
-//            System.out.println(url);
             link.setOnAction((ActionEvent event) -> {
                 //openURL(url);
                 ScreenController.showWebBrowserScreen(url);
@@ -104,26 +101,16 @@ class MessageTableCell extends TableCell<IGitCommit, IGitCommit> {
         return link;
     }
 
-    private static void openURL(final String url) {
-        try {
-            new ProcessBuilder("x-www-browser", url).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private Collection<Node> getBranchLabels(IGitCommit commit) {
+        return repo.getBranchHeadsAt(commit).stream()
+                .map(b -> getRefLabel(b))
+                .collect(Collectors.toList());
     }
 
-    private Collection<Node> getBranchNames(IGitCommit commit) {
-        return new ArrayList<>();
-//        return repo.getBranchHeadsAt(commit).stream()
-//                .map(b -> getRefLabel(b))
-//                .collect(Collectors.toList());
-    }
-
-    private Collection<Node> getTagNames(IGitCommit commit) {
-        return new ArrayList<>();
-//        return repo.getTagsAt(commit).stream()
-//                .map(t -> getRefLabel(t))
-//                .collect(Collectors.toList());
+    private Collection<Node> getTagLabels(IGitCommit commit) {
+        return repo.getTagsAt(commit).stream()
+                .map(t -> getRefLabel(t))
+                .collect(Collectors.toList());
     }
 
 }

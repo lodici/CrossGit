@@ -54,7 +54,7 @@ public class CommitsPane extends VBox
         task = new CommitsTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
             final ObservableList<IGitCommit> commits = task.getValue();
-            commitsTable.setItems(commits);
+            commitsTable.setItems(commits, repo);
             commitsTable.selectFirstRow();
             headerLabel.setText(String.format("Commits: %s",
                     NumberFormat.getInstance().format(commits.size()))

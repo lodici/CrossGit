@@ -31,5 +31,13 @@ public final class DesktopHelper {
         openDirectory(new File(path));
     }
 
+    public static void openURL(final String url) {
+        try {
+            new ProcessBuilder("x-www-browser", url).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private DesktopHelper() {}
 }

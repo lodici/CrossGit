@@ -5,4 +5,6 @@ public interface IGitCommit {
     public String getAuthor();
     public String getMessage();
     public Object getHeadRefs();
+    public boolean isHeadOf(IGitBranch branch);
+    public String getHash();
 }
