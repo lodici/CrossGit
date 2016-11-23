@@ -2,7 +2,6 @@ package com.spr.crossgit;
 
 import com.spr.crossgit.api.IGitRepository;
 import com.spr.crossgit.screen.MainScreen;
-import com.spr.crossgit.screen.StartScreen;
 import com.spr.crossgit.screen.WebBrowserScreen;
 import com.spr.crossgit.screen.commit.CommitScreen;
 import java.util.Optional;
@@ -87,16 +86,11 @@ public final class ScreenController {
             }
         });
         showMainScreen();
-//        showStartScreen();
         mainStage.show();
     }
 
     public static Stage getStage() {
         return mainStage;
-    }
-
-    public static void showStartScreen() {
-        showScreen(new StartScreen());
     }
 
     public static void showMainScreen() {
