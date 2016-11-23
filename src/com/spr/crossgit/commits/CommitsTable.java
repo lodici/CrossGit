@@ -8,11 +8,9 @@ import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.Optional;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 
@@ -57,17 +55,6 @@ class CommitsTable extends TableView<IGitCommit> {
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    private void addComitterColumn() {
-        TableColumn<IGitCommit, IGitCommit> col = new TableColumn<>("Commits");
-        col.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
-        col.setCellFactory(c -> new CommitterTableCell());
-        col.setMaxWidth(110);
-        col.setMinWidth(110);
-        col.setSortable(false);
-        col.setEditable(false);
-        getColumns().add(col);
-    }
-
     private VirtualFlow<?> loadVirtualFlow() {
         return (VirtualFlow<?>) ((TableViewSkin<?>) getSkin()).getChildren().get(1);
     }
@@ -88,14 +75,10 @@ class CommitsTable extends TableView<IGitCommit> {
         }
     }
 
-    private void setTableColumns(IGitRepository repo) {
-        addComitterColumn();
-        getColumns().add(new MessageColumn(repo));
-    }
-
     void setItems(ObservableList<IGitCommit> commits, IGitRepository repo) {
         if (getColumns().isEmpty()) {
-            setTableColumns(repo);
+            getColumns().add(new WhoWhenTableColumn());
+            getColumns().add(new MessageColumn(repo));
         }
         setItems(commits);
     }
