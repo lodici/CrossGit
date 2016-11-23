@@ -17,13 +17,13 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.FlowPane;
 
-class MessageColumn extends TableColumn<IGitCommit, IGitCommit> {
+class MessageTableColumn extends TableColumn<IGitCommit, IGitCommit> {
 
     private static final Pattern ISSUE_PATTERN = Pattern.compile("\\#+([0-9]+)");
 
     private final IGitRepository repo;
 
-    MessageColumn(IGitRepository repo) {
+    MessageTableColumn(IGitRepository repo) {
 
         this.repo = repo;
 

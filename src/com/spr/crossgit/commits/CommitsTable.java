@@ -78,7 +78,7 @@ class CommitsTable extends TableView<IGitCommit> {
     void setItems(ObservableList<IGitCommit> commits, IGitRepository repo) {
         if (getColumns().isEmpty()) {
             getColumns().add(new WhoWhenTableColumn());
-            getColumns().add(new MessageColumn(repo));
+            getColumns().add(new MessageTableColumn(repo));
         }
         setItems(commits);
     }
