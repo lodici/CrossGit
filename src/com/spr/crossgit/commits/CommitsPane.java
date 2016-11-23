@@ -41,6 +41,7 @@ public class CommitsPane extends VBox
 
     public void setRepo(IGitRepository repo, IGitBranch branch) {
         if (this.repo != null && this.repo == repo) {
+            setBranch(branch);
             return;
         }
         this.repo = repo;
@@ -55,7 +56,7 @@ public class CommitsPane extends VBox
         task.setOnSucceeded((WorkerStateEvent event) -> {
             final ObservableList<IGitCommit> commits = task.getValue();
             commitsTable.setItems(commits, repo);
-            commitsTable.selectFirstRow();
+            setBranch(branch);
             headerLabel.setText(String.format("Commits: %s",
                     NumberFormat.getInstance().format(commits.size()))
             );
@@ -67,36 +68,6 @@ public class CommitsPane extends VBox
         executor.submit(task);
         executor.shutdown();
     }
-
-//    public void setRepo(IGitRepository repo, BranchesInfo info) {
-//
-//        if (this.repo != null && this.repo == repo) {
-//            return;
-//        }
-//        this.repo = repo;
-//
-//        if (task != null && task.isRunning()) {
-//            task.cancel();
-//        }
-//        headerLabel.setText("Loading commits...");
-//        commitsTable.setItems(FXCollections.emptyObservableList());
-//        commitsTable.hideHeader();
-//        task = new CommitsTask(repo);
-//        task.setOnSucceeded((WorkerStateEvent event) -> {
-//            final ObservableList<GitCommit> commits = task.getValue();
-//            commitsTable.setItems(commits);
-//            commitsTable.selectFirstRow();
-//            headerLabel.setText(String.format("Commits: %s",
-//                    NumberFormat.getInstance().format(commits.size()))
-//            );
-//        });
-//        if (executor != null && !executor.isTerminated()) {
-//            executor.shutdownNow();
-//        }
-//        executor = Executors.newSingleThreadExecutor();
-//        executor.submit(task);
-//        executor.shutdown();
-//    }
 
     @Override
     public void setBranch(IGitBranch branch) {
