@@ -1,6 +1,7 @@
 package com.spr.crossgit.commits;
 
 import com.spr.crossgit.api.IGitBranch;
+import com.spr.crossgit.api.IGitTag;
 import javafx.scene.control.Label;
 
 class RefLabel extends Label {
@@ -19,4 +20,9 @@ class RefLabel extends Label {
     RefLabel(IGitBranch branch) {
         this(branch.getName().replaceAll("refs/heads/", ""));
     }
+
+    RefLabel(IGitTag tag) {
+        this(tag.getName().replaceAll("refs/tags/", ""));
+    }
+
 }

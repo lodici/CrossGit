@@ -68,22 +68,6 @@ class CommitsTable extends TableView<IGitCommit> {
         getColumns().add(col);
     }
 
-    private void addMessageColumn(IGitRepository repo) {
-        TableColumn<IGitCommit, IGitCommit> col = new TableColumn<>();
-        col.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
-        col.setCellFactory(c -> new MessageTableCell(repo));
-        col.setSortable(false);
-        col.setEditable(false);
-
-        // sizes column to table width (but ignores vertical scrollbar).
-        // msgCol.prefWidthProperty().bind(commitsTable.widthProperty());
-
-        // sizes column to fit taking in account scrollbar.
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 50 ); // 50% width
-
-        getColumns().add(col);
-    }
-
     private VirtualFlow<?> loadVirtualFlow() {
         return (VirtualFlow<?>) ((TableViewSkin<?>) getSkin()).getChildren().get(1);
     }
@@ -106,7 +90,7 @@ class CommitsTable extends TableView<IGitCommit> {
 
     private void setTableColumns(IGitRepository repo) {
         addComitterColumn();
-        addMessageColumn(repo);
+        getColumns().add(new MessageColumn(repo));
     }
 
     void setItems(ObservableList<IGitCommit> commits, IGitRepository repo) {
