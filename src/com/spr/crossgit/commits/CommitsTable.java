@@ -61,7 +61,9 @@ class CommitsTable extends TableView<IGitCommit> {
 
     private int getNumberOfVisibleRows() {
         VirtualFlow<?> vf = loadVirtualFlow();
-        return vf.getLastVisibleCell().getIndex() - vf.getFirstVisibleCell().getIndex();
+        return vf.getLastVisibleCell() != null
+            ? vf.getLastVisibleCell().getIndex() - vf.getFirstVisibleCell().getIndex()
+            : 0;
     }
 
     void select(IGitBranch branch) {
