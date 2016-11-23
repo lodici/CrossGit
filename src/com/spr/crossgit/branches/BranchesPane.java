@@ -2,6 +2,7 @@ package com.spr.crossgit.branches;
 
 import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.api.BranchSortOrder;
+import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitRepository;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,18 +32,26 @@ public class BranchesPane {
         return pane;
     }
 
-    public void setRepo(IGitRepository repo, Runnable r) {
+    private void setRepo(IGitRepository repo, Runnable r) {
         this.repo = repo;
         if (task != null && task.isRunning()) {
             task.cancel();
         }
+        final IGitBranch selected = !branchesList.getItems().isEmpty()
+            ? branchesList.getSelectionModel().getSelectedItem()
+            : null;
         branchesList.setItems(FXCollections.emptyObservableList());
         task = new BranchesTask(repo);
         task.setOnSucceeded((WorkerStateEvent event) -> {
             branchesList.setItems(task.getValue());
-            if (r != null) {
-                r.run();
+            if (selected == null) {
+                branchesList.getSelectionModel().select(0);
+                branchesList.scrollTo(0);
+            } else {
+                branchesList.getSelectionModel().select(selected);
+                branchesList.scrollTo(selected);
             }
+            branchesList.requestFocus();
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
@@ -53,10 +62,11 @@ public class BranchesPane {
     }
 
     public void setRepo(IGitRepository repo) {
-        setRepo(repo, null);
+        setRepo(repo, this::doPostSortAction);
     }
 
     void doPostSortAction() {
+        branchesList.getSelectionModel().select(0);
         branchesList.scrollTo(0);
         branchesList.requestFocus();
     }

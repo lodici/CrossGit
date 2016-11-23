@@ -56,10 +56,10 @@ public class CommitsPane extends VBox
         task.setOnSucceeded((WorkerStateEvent event) -> {
             final ObservableList<IGitCommit> commits = task.getValue();
             commitsTable.setItems(commits, repo);
-            setBranch(branch);
             headerLabel.setText(String.format("Commits: %s",
                     NumberFormat.getInstance().format(commits.size()))
             );
+            commitsTable.requestFocus();
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
