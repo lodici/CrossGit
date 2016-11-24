@@ -44,10 +44,11 @@ class BranchesList extends ListView<IGitBranch> {
                 super.updateItem(branch, empty);
                 if (!empty) {
                     setText(branch.getName());
-                    super.setStyle(branch.isCurrent()
-                        ? "-fx-text-fill: white; -fx-font-weight: bold;"
-                        : "-fx-text-fill: #cccccc;"
-                    );
+                    if (branch.isCurrent()) {
+                        super.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+                    } else {
+                        super.setStyle(null);
+                    }
                 } else {
                     setText("");
                 }

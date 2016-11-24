@@ -191,22 +191,29 @@ A pseudo-class is used to define a special state of an element.
 
 .list-view {
    -fx-background-color: transparent;
-   -fx-table-cell-border-color: transparent;    
+   /*-fx-table-cell-border-color: transparent;*/
+}
+.list-view .list-cell {
+    -fx-text-fill: -spr-text-color;
 }
 .list-view .list-cell:even {
     -fx-background-color: -spr-even-background-color;
-    -fx-text-fill: -spr-text-color;
+    /*-fx-text-fill: -spr-text-color;*/
 }
 .list-view .list-cell:odd {
     -fx-background-color: -spr-odd-background-color;
-    -fx-text-fill: -spr-text-color;
+    /*-fx-text-fill: -spr-text-color;*/
+}
+.list-view .list-cell:filled:hover {
+    /*-fx-background-color: #666666;*/
+    -fx-text-fill: yellow;
 }
 /* Style of selected row but only when list view has focus */
-.list-view:focused .list-cell:filled:selected {
+/*.list-view:focused .list-cell:filled:selected {
     -fx-background-color: #666666;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
-}
+}*/
 .list-view .list-cell:empty {
     -fx-background-color: -spr-empty-background-color;
 }
@@ -215,6 +222,14 @@ A pseudo-class is used to define a special state of an element.
 .list-view .scroll-bar:horizontal .increment-button,
 .list-view .scroll-bar:horizontal .decrement-button {
     -fx-padding:0;
+}
+.list-view > .virtual-flow > .scroll-bar:vertical,
+.list-view > .virtual-flow > .scroll-bar:vertical > .track,
+.list-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.list-view > .virtual-flow > .scroll-bar:horizontal,
+.list-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.list-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+    -fx-background-color: transparent;
 }
 
 
@@ -287,17 +302,6 @@ A pseudo-class is used to define a special state of an element.
 .table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
     -fx-background-color: transparent;
 }
-
-.list-view > .virtual-flow > .scroll-bar:vertical,
-.list-view > .virtual-flow > .scroll-bar:vertical > .track,
-.list-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
-.list-view > .virtual-flow > .scroll-bar:horizontal,
-.list-view > .virtual-flow > .scroll-bar:horizontal > .track,
-.list-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
-    -fx-background-color: transparent;
-}
-
-
 
 /*
 .table-view > .virtual-flow > .scroll-bar > .increment-button, 
