@@ -1,5 +1,6 @@
 package com.spr.crossgit.screen;
 
+import com.spr.crossgit.Css;
 import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.IScreen;
 import com.spr.crossgit.MainApp;
@@ -13,6 +14,7 @@ import com.spr.crossgit.commits.CommitsPane;
 import com.spr.crossgit.repo.local.LocalRepoPane;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
 import com.spr.crossgit.tags.TagsPane;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +49,8 @@ public class MainScreen implements IScreen, IBranchListener {
     private final SplitPane splitPane = new SplitPane();
 
     public MainScreen() {
+
+        Css.setBorderColor(sidebar, Color.red);
 
         commitsPane = new CommitsPane(this);
         branchesPane = new BranchesPane();
@@ -129,7 +133,7 @@ public class MainScreen implements IScreen, IBranchListener {
 
     public void onSelectCommit(IGitCommit newValue) {
         if (newValue != null) {
-//            changesetPane.setCommit(repo, newValue);
+            changesetPane.setCommit(repo, newValue);
         }
     }
 

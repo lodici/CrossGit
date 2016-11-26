@@ -1,6 +1,5 @@
 package com.spr.crossgit.jgit;
 
-import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
@@ -100,9 +99,10 @@ public class JGitRepository implements IGitRepository {
     }
 
     @Override
-    public ObservableList<ChangeSetFile> getChangesetFiles(GitCommit gitCommit) {
+    public ObservableList<ChangeSetFile> getChangesetFiles(IGitCommit gitCommit) {
+        final JGitCommit commit = (JGitCommit) gitCommit;
         try (RevWalk rw = new RevWalk(repo)) {
-            RevCommit revCommit = rw.parseCommit(gitCommit.getId());
+            RevCommit revCommit = commit.getRevCommit();
             if (revCommit.getParentCount() > 0) {
                 RevCommit parent = rw.parseCommit(revCommit.getParent(0).getId());
                 DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);

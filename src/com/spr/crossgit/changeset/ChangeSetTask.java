@@ -1,6 +1,6 @@
 package com.spr.crossgit.changeset;
 
-import com.spr.crossgit.GitCommit;
+import com.spr.crossgit.api.IGitCommit;
 import com.spr.crossgit.api.IGitRepository;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -8,9 +8,9 @@ import javafx.concurrent.Task;
 class ChangeSetTask extends Task<ObservableList<ChangeSetFile>> {
 
     private final IGitRepository repo;
-    private final GitCommit gitCommit;
+    private final IGitCommit gitCommit;
 
-    ChangeSetTask(IGitRepository repo, GitCommit commit) {
+    ChangeSetTask(IGitRepository repo, IGitCommit commit) {
         this.repo = repo;
         this.gitCommit = commit;
     }

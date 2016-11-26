@@ -58,4 +58,8 @@ public class JGitCommit implements IGitCommit {
     public String getHash() {
         return revCommit.getId().getName();
     }
+
+    RevCommit getRevCommit() {
+        return revCommit;
+    }
 }

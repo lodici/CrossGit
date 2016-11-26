@@ -59,7 +59,10 @@ public class CommitsPane extends VBox
             headerLabel.setText(String.format("Commits: %s",
                     NumberFormat.getInstance().format(commits.size()))
             );
-            commitsTable.requestFocus();
+            Platform.runLater(() -> {
+                commitsTable.requestFocus();
+                commitsTable.getSelectionModel().select(0);
+            });
         });
         if (executor != null && !executor.isTerminated()) {
             executor.shutdownNow();
