@@ -4,14 +4,28 @@ import com.spr.crossgit.GitCommit;
 import com.spr.crossgit.screen.MainScreen;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.eclipse.jgit.lib.Ref;
 
 class CommitsTable extends TableView<GitCommit> {
@@ -49,12 +63,66 @@ class CommitsTable extends TableView<GitCommit> {
             getSelectionModel().clearAndSelect(0);
         });
     }
+    
+    private void setRowContextMenu(TableRow<GitCommit> row, GitCommit commit) {
+        final ContextMenu menu = new ContextMenu();
+        final List<Ref> branches = commit.getHeadRefs();
+        if (!branches.isEmpty()) {
+            if (branches.size() == 1) {
+                final MenuItem item = new MenuItem("Delete branch");
+                item.setOnAction((ActionEvent event) -> {
+                    Stage myDialog = new Stage();
+                    myDialog.initModality(Modality.APPLICATION_MODAL);
+                    Scene myDialogScene = new Scene(VBoxBuilder.create()
+                            .prefWidth(640)
+                            .prefHeight(480)
+                            .children(new Text("Hello! it's My Dialog."))
+                            .alignment(Pos.CENTER)
+                            .padding(new Insets(10))
+                            .build());
+                    myDialog.setScene(myDialogScene);
+                    myDialog.show();
+                });
+                menu.getItems().add(item);
+            } else {
+                final Menu subMenu = new Menu("Delete branch");
+                for (Ref ref : branches) {
+                    final MenuItem item = new MenuItem(ref.getName().replaceAll("refs/heads/", ""));
+                    subMenu.getItems().add(item);
+                }
+                menu.getItems().add(subMenu);
+            }
+        }
+        row.setContextMenu(menu);
+//        try (Git git = new Git(repo)) {
+//            DeleteBranchCommand cmd = git.branchDelete();
+//            cmd.setBranchNames(branchnames);
+//        }
+    }
+
+    private void setRowFactory() {
+        setRowFactory(new Callback<TableView<GitCommit>, TableRow<GitCommit>>() {
+            @Override
+            public TableRow<GitCommit> call(TableView<GitCommit> tv) {
+                return new TableRow<GitCommit>() {
+                    @Override
+                    protected void updateItem(GitCommit item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setRowContextMenu(this, item);
+                        }
+                    }
+                };
+            }
+        });
+    }
 
     private void setDefaultProperties() {
         setFixedCellSize(44.0);
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         addComitterColumn();
         addMessageColumn();
+        setRowFactory();
     }
 
     private void addComitterColumn() {
