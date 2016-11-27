@@ -1,7 +1,7 @@
 package com.spr.crossgit.branches;
 
-import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.ResourceHelper;
+import com.spr.crossgit.api.BranchSortOrder;
 import com.spr.crossgit.widgets.ToggleRadioButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

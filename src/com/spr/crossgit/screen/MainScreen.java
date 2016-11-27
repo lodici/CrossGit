@@ -4,6 +4,7 @@ import com.spr.crossgit.Css;
 import com.spr.crossgit.IBranchListener;
 import com.spr.crossgit.IScreen;
 import com.spr.crossgit.MainApp;
+import com.spr.crossgit.ResourceHelper;
 import com.spr.crossgit.ScreenController;
 import com.spr.crossgit.api.IGitBranch;
 import com.spr.crossgit.api.IGitCommit;
@@ -14,6 +15,7 @@ import com.spr.crossgit.commits.CommitsPane;
 import com.spr.crossgit.repo.local.LocalRepoPane;
 import com.spr.crossgit.repo.remote.RemoteRepoPane;
 import com.spr.crossgit.tags.TagsPane;
+import com.spr.crossgit.widgets.ToggleRadioButton;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -47,6 +49,8 @@ public class MainScreen implements IScreen, IBranchListener {
     private final Tab tagsTab = new Tab("Tags: ...");
     private final TabPane sidebar = new TabPane();
     private final SplitPane splitPane = new SplitPane();
+    private final HBox toolbar = new HBox();
+    private final VBox minSidebar = new VBox();
 
     public MainScreen() {
 
@@ -68,10 +72,10 @@ public class MainScreen implements IScreen, IBranchListener {
         // repo bar.
         HBox.setHgrow(localRepoPane, Priority.NEVER);
         HBox.setHgrow(remoteRepoPane, Priority.ALWAYS);
-        HBox toolbar = new HBox(localRepoPane, remoteRepoPane);
         toolbar.setAlignment(Pos.CENTER_LEFT);
+        toolbar.getChildren().addAll(localRepoPane, remoteRepoPane);
 
-        // tabpane
+        // sidebar
         VBox.setVgrow(branchesPane.node(), Priority.ALWAYS);
         VBox.setVgrow(tagsPane, Priority.ALWAYS);
         branchesTab.setClosable(false);
@@ -83,6 +87,21 @@ public class MainScreen implements IScreen, IBranchListener {
         tagsTab.setContent(tagsBox);
         sidebar.getTabs().add(tagsTab);
 
+        // minimized sidebar
+        final ToggleRadioButton minMaxButton = new ToggleRadioButton();
+        minMaxButton.setGraphic(ResourceHelper.getImage("sort-alpha-16.png"));
+        minMaxButton.setSelected(false);
+        minMaxButton.setMaxWidth(20.0);
+        minMaxButton.setMinWidth(20.0);
+        minMaxButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                setLayout(newValue);
+            }
+        });
+        minSidebar.getChildren().add(minMaxButton);
+        minSidebar.setPrefWidth(20.0);
+
         // main content SplitPane
         final StackPane sp1 = new StackPane(commitsPane);
         sp1.setStyle("-fx-background-color: transparent;");
@@ -93,10 +112,7 @@ public class MainScreen implements IScreen, IBranchListener {
         splitPane.setDividerPositions(0.7f);
         splitPane.setOrientation(Orientation.VERTICAL);
 
-        // Layout
-        root.setTop(toolbar);
-        root.setLeft(sidebar);
-        root.setCenter(splitPane);
+        setLayout(false);
 
         ScreenController.getStage().iconifiedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -117,6 +133,12 @@ public class MainScreen implements IScreen, IBranchListener {
                 }
             }
         });
+    }
+
+    private void setLayout(boolean showSidebar) {
+        root.setTop(toolbar);
+        root.setLeft(showSidebar ? sidebar : minSidebar);
+        root.setCenter(splitPane);
     }
 
     private void setRepoStatus() {
